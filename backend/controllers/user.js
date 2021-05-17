@@ -14,30 +14,35 @@ const dateJsToSql = () => {// Convert Date to DATETIME SQL
 
 exports.signin = (req, res, next) => {
     const user = [];// Create array to fill SQL request
-    console.log(req.body);
-    db.query("SELECT email FROM User WHERE email = ?;", req.body.mail, (err, result) => {
+    db.query("SELECT email FROM User WHERE email = ?;", req.body.email, (err, result) => {
         if (err) throw err;
 
         if (result.length > 0) {// Check if email already exist or not in DB
             return res.status(401).json({ message: 'Email deja utilisé!' });
         }
-
         bcrypt.hash(req.body.password, 10)
         .then(hash => {
             user.push(// Add request data to array
                 req.body.nom,
                 req.body.prenom,
-                req.body.mail,
+                req.body.email,
                 dateJsToSql(),
                 hash,)
-            console.log(user);
-
             const sql = "INSERT INTO User " +// SQL request to signin
-                "(nom, prenom, email, role, date_signin, mdp) " +
-                "VALUES ( ?, ?, ?, 'U', ?, ?);";
+                        "(nom, prenom, email, role, date_signin, mdp) " +
+                        "VALUES ( ?, ?, ?, 'U', ?, ?);";
 
             db.query(sql, user, (err, result) => {// Create User in DB
                 if (err) throw err;
+                console.log(result.insertId);
+                res.status(200).json({// Create and send token
+                    userId: result.insertId,
+                    token: jwt.sign(
+                    {userId: result.insertId},
+                    "SECRET_TOKEN_KEY",
+                    {expiresIn: '24h'}
+                    )
+                })
             })
         })
         .catch(error => res.status(500).json({ error }));
@@ -48,18 +53,16 @@ exports.signin = (req, res, next) => {
 exports.login = (req, res, next) => {
 
     db.query("SELECT COUNT(*) as present FROM User WHERE email = ?",// Check is email already exist in DB
-        req.body.mail,
+        req.body.email,
         (err, result) => {
             if (err) throw err;
             if (result[0].present === 0) {// If not 
                 return res.status(401).json({ message: "Utilisateur non trouvé." });
             }// If yes
             const sql = "SELECT mdp, id FROM User " +
-            "WHERE email = ? ;"
-            db.query(sql, req.body.mail, (err, result, fields) => {// Recover password and id
+                        "WHERE email = ? ;"
+            db.query(sql, req.body.email, (err, result, fields) => {// Recover password and id
                 if (err) throw err;
-                console.log(result[0]);
-                console.log(fields);
                 bcrypt.compare(req.body.password, result[0].mdp)// Compare Emails
                     .then(valid => {
                         if (!valid) {
