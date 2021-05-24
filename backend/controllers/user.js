@@ -1,23 +1,16 @@
-const db = require('../connectionDB');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import { db } from '../connectionDB.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dateJsToSql from '../utils/date.js';
+import { sqlCheckEmail, sqlSignin, sqllogin } from '../utils/scriptSQL.js';
 
-const dateJsToSql = () => {// Convert Date to DATETIME SQL
-    const date = new Date()
-    return date.getUTCFullYear() + '-' +
-    ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
-    ('00' + date.getDate()).slice(-2) + ' ' +
-    ('00' + date.getHours()).slice(-2) + ':' +
-    ('00' + date.getMinutes()).slice(-2) + ':' +
-    ('00' + date.getSeconds()).slice(-2);
-}
 
-exports.signin = (req, res, next) => {
+export const signin = (req, res, next) => {
     const user = [];// Create array to fill SQL request
-    db.query("SELECT email FROM User WHERE email = ?;", req.body.email, (err, result) => {
+    db.query(sqlCheckEmail, req.body.email, (err, result) => {
         if (err) throw err;
 
-        if (result.length > 0) {// Check if email already exist or not in DB
+        if (result[0].present > 0) {// Check if email already exist or not in DB
             return res.status(401).json({ message: 'Email deja utilisé!' });
         }
         bcrypt.hash(req.body.password, 10)
@@ -28,18 +21,15 @@ exports.signin = (req, res, next) => {
                 req.body.email,
                 dateJsToSql(),
                 hash,)
-            const sql = "INSERT INTO User " +// SQL request to signin
-                        "(nom, prenom, email, role, date_signin, mdp) " +
-                        "VALUES ( ?, ?, ?, 'U', ?, ?);";
 
-            db.query(sql, user, (err, result) => {// Create User in DB
+            db.query(sqlSignin, user, (err, result) => {// Create User in DB
                 if (err) throw err;
-                console.log(result.insertId);
+                console.log(process.env.SECRET_TOKEN_KEY);
                 res.status(200).json({// Create and send token
                     userId: result.insertId,
                     token: jwt.sign(
                     {userId: result.insertId},
-                    "SECRET_TOKEN_KEY",
+                    process.env.SECRET_TOKEN_KEY,
                     {expiresIn: '24h'}
                     )
                 })
@@ -50,18 +40,16 @@ exports.signin = (req, res, next) => {
     })
 };
 
-exports.login = (req, res, next) => {
+export const login = (req, res, next) => {
+    console.log(req.body);
 
-    db.query("SELECT COUNT(*) as present FROM User WHERE email = ?",// Check is email already exist in DB
-        req.body.email,
-        (err, result) => {
+    db.query(sqlCheckEmail, req.body.email, (err, result) => {// Check is email already exist in DB
             if (err) throw err;
-            if (result[0].present === 0) {// If not 
+            if (!result[0].present) {// If not 
                 return res.status(401).json({ message: "Utilisateur non trouvé." });
             }// If yes
-            const sql = "SELECT mdp, id FROM User " +
-                        "WHERE email = ? ;"
-            db.query(sql, req.body.email, (err, result, fields) => {// Recover password and id
+
+            db.query(sqllogin, req.body.email, (err, result, fields) => {// Recover password and id
                 if (err) throw err;
                 bcrypt.compare(req.body.password, result[0].mdp)// Compare Emails
                     .then(valid => {
@@ -72,7 +60,7 @@ exports.login = (req, res, next) => {
                             userId: result[0].id,
                             token: jwt.sign(
                             {userId: result[0].id},
-                            "SECRET_TOKEN_KEY",
+                            process.env.SECRET_TOKEN_KEY,
                             {expiresIn: '24h'}
                             )
                         });
@@ -81,4 +69,3 @@ exports.login = (req, res, next) => {
             })
     })
 };
-

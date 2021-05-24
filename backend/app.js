@@ -1,6 +1,7 @@
-const express = require('express');
-const articleRoutes = require('./routes/article');
-const userRoutes = require('./routes/user');
+import express, { json } from 'express';
+import articleRoutes from './routes/article.js';
+import userRoutes from './routes/user.js';
+import path,{ dirname } from 'path';
 
 const app = express();
 app.use((req, res, next) => {
@@ -10,7 +11,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
+app.use(json());
 
 // Get all users
 
@@ -41,8 +42,9 @@ app.use(express.json());
 //   })
 // })
 
-
+// const __dirname = dirname(__filename)
+app.use('/images', express.static('images'));
 app.use('/api/auth', userRoutes);
 app.use('/api', articleRoutes);
 
-module.exports = app;
+export default app;

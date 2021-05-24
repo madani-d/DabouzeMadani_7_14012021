@@ -1,43 +1,31 @@
-const db = require('../connectionDB');
+import { db } from '../connectionDB.js';
+import dateJsToSql from '../utils/date.js';
+import { sqlCreateArticle, sqlGetAllArticle } from '../utils/scriptSQL.js'
 
-const dateJsToSql = () => {// Convert Date to DATETIME SQL
-    const date = new Date()
-    return date.getUTCFullYear() + '-' +
-    ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
-    ('00' + date.getDate()).slice(-2) + ' ' +
-    ('00' + date.getHours()).slice(-2) + ':' +
-    ('00' + date.getMinutes()).slice(-2) + ':' +
-    ('00' + date.getSeconds()).slice(-2);
-}
 
-exports.createArticle = (req, res, next) => {
+
+export function createArticle(req, res, next) {
     let article = [
-        req.body.user_id,
-        req.body.image_url,
-        req.body.texte_article,
+        req.body.userId,
+        `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        req.body.article,
         dateJsToSql(),
     ]
-    console.log(req.body);
-    console.log(article);
 
-    const sql = "INSERT INTO Article " +
-                "(user_id, image_url, texte_article, date_post) " +
-                "VALUES (?, ?, ?, ?)";
-    db.query(sql, article, (err, result) => {
+    console.log(article);
+    console.log("rêquete reçu");
+    db.query(sqlCreateArticle, article, (err, result) => {
         if (err) throw err;
-        console.log(result);
+        console.log("requête validé");
         res.status(200).json({ message: "Article publié avec succés !" })
     })
 
 }
 
-exports.getAllArticle = (req, res, next) => {
-    let sql = "SELECT * FROM User;";
-
-    db.query(sql, (err, result) => {
+export function getAllArticle(req, res, next) {
+    db.query(sqlGetAllArticle, (err, result) => {
         if (err) throw err;
-        console.log(result);
         res.send({result});
         next();
     })
-};
+}

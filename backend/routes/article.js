@@ -1,22 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const db = require('../connectionDB');
+import { Router } from 'express';
+const router = Router();
+import multer from '../middleware/multer-config.js'
+import { createArticle, getAllArticle } from '../controllers/article.js';
 
-const articleCtrl = require('../controllers/article');
 
-// router.post('/article', articleCtrl.createArticle);
-// router.get('/', articleCtrl.getAllArticle);
-// router.patch('/:id');
-// router.delete('/:id');
 
-router.get('/getall', (req, res, next) => {
-    let sql = "SELECT * FROM Article;";
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        console.log("essai", result);
-        res.send({result});
-        next();
-    })
-});
+router.post('/article', multer, createArticle);
+router.get('/getall', getAllArticle);
 
-module.exports = router;
+
+export default router;
