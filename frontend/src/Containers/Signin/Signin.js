@@ -1,12 +1,15 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import logo from '../assets/icon-above-font.png'
+import { useHistory } from 'react-router-dom';
+import logo from '../../assets/icon-above-font.png';
 
 function Signin({  setUserId, setToken, setIsLogin }) {
     const [nom, setNom] = useState("");
     const [prenom, setPrenom] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const history = useHistory();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -27,12 +30,10 @@ function Signin({  setUserId, setToken, setIsLogin }) {
                     "token": res.data.token
                 }
                 localStorage.setItem("storageToken", JSON.stringify(storageToken));
+                history.push('/home');
             })
     };
 
-    const handleClick = () => {
-        setIsLogin(true)
-    }
 
     return (
         <div className="login">
@@ -71,7 +72,7 @@ function Signin({  setUserId, setToken, setIsLogin }) {
 
                 <button >S'inscrire</button>
             </form>
-            <button onClick={handleClick}>Se connecter</button>
+            <button onClick={() => history.push('/login')}>Se connecter</button>
         </div>
     )
 }

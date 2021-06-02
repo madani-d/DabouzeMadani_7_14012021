@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import axios from 'axios';
 
-function Formulaire({ userId, token, setToken, setUserId, refresh, setRefresh }) {
+function Formulaire() {
     const [article, setArticle] = useState("");
     const [selectedFile, setSelectedFile] = useState();
     const [preview, setPreview] = useState();
@@ -10,28 +10,34 @@ function Formulaire({ userId, token, setToken, setUserId, refresh, setRefresh })
     const handleSubmit = event => {
         event.preventDefault();
         console.log(selectedFile);
+        console.log(selectedFile.type);
 
         const formData = new FormData();
         formData.append("article", article);
         formData.append("file", selectedFile);
-        formData.append("userId", userId)
+        formData.append("userId", JSON.parse(localStorage.storageToken).userId)
 
         axios.post('http://localhost:5000/api/article',
-        formData, { headers: { "Content-Type": "image/jpeg" } })
+        formData,
+        { headers: {
+            "Content-Type": `${selectedFile.type}`,
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+        
+        }})
 
-        .then(res => {
-            setRefresh(!refresh)
-            console.log(res)
-        })
+            .then(res => {
+                console.log(res);
+                setArticle("");
+                setSelectedFile();
+                setPreview();
+            })
     }
 
     const handleFile = e => {
         e.preventDefault();
-        console.log("selected file",selectedFile);
         setPreview(URL.createObjectURL(e.target.files[0]))
 
         console.log(e.target.files);
-        console.log(e.target.files[0]);
         setSelectedFile(e.target.files[0]);
     }
 

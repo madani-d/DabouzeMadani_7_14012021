@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import logo from '../assets/icon-above-font.png'
+import { useHistory } from 'react-router-dom';
+import logo from '../../assets/icon-above-font.png'
 
-function Login({ setUserId, setToken, setIsLogin }) {
+function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const history = useHistory();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -14,21 +17,17 @@ function Login({ setUserId, setToken, setIsLogin }) {
 
             .then(res => {        
                 console.log(res.data);     // After succes Post clear all form element state 
-            setUserId(res.data.userId);// And add userId and token to state and localstorage
-            setEmail("");
-            setPassword("");
-            setToken(res.data.token);
-            const storageToken = {
-                "userId": res.data.userId,
-                "token": res.data.token
-            }
-            localStorage.setItem("storageToken", JSON.stringify(storageToken));
+                setEmail("");
+                setPassword("");
+                const storageToken = { // And add userId and token to localstorage
+                    "userId": res.data.userId,
+                    "token": res.data.token
+                }
+                localStorage.setItem("storageToken", JSON.stringify(storageToken));
+                history.push('/home');
             })
     };
 
-    const handleClick = () => {
-        setIsLogin(false);
-    }
 
     return (
         <div className="login">
@@ -50,7 +49,7 @@ function Login({ setUserId, setToken, setIsLogin }) {
                     onChange={(e) => setPassword(e.target.value)} />
                 <button>Connexion</button>
             </form>
-        <button onClick={handleClick}>Créer un compte</button>
+        <button onClick={() => history.push('/signin')}>Créer un compte</button>
         </div>
     )
 };
