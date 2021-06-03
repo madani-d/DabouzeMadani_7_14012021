@@ -4,10 +4,18 @@ import Login from './Containers/Login/Login';
 import Profile from './Containers/Profile/Profile';
 import Home from './Containers/Home/Home';
 import Settings from './Containers/Settings/Settings';
+import ErrorPage from './Containers/ErrorPage/ErrorPage';
+import { useSelector } from 'react-redux';
+import { RestoreConnection } from './utils/restoreConnection'
 
 
-function App() {
+export default function App() {
+  
+  const connected = useSelector(state => state.connectedReducer.connected)
 
+  if (!connected && localStorage.storageToken) {
+    RestoreConnection(JSON.parse(localStorage.storageToken).token)
+  }
 
   return (
     <>
@@ -18,14 +26,19 @@ function App() {
           </Route>
           <Route path='/signin' exact component={Signin} />
           <Route path='/login' exact component={Login} />
-          <Route path='/home' exact component={Home} />
-          <Route path='/profile/:slug' exact component={Profile} />
-          <Route path='/settings' exact component={Settings} />
+          <Route path='/errorPage' exact component={ErrorPage} />
+          {connected &&
+            <>
+              <Route path='/home' exact component={Home} />
+              <Route path='/profile/:slug' exact component={Profile} />
+              <Route path='/settings' exact component={Settings} />
+            </>
+          }
+
+
         </Switch>
       </Router>
     </>
   )
 }
 
-
-export default App;

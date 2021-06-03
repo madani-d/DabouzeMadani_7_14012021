@@ -33,6 +33,13 @@ export const getAllArticle = (req, res, next) => {
         return new Promise((resolve, reject) => {
             db.query(sqlGetAllArticle, (err, result) => {
                     if (err) throw err;
+                    const resultArr = [...result];
+                    for (let i = 0; i < resultArr.length; i++) {
+                        resultArr[i].user_id === userId ?
+                            resultArr[i].updateArticle = true
+                        :
+                            resultArr[i].updateArticle = false
+                    }
                     resolve(result)
             })
         }) 
@@ -42,7 +49,14 @@ export const getAllArticle = (req, res, next) => {
         return new Promise((resolve, reject) => {
             db.query(sqlGetComment, articleId, (err, result) => {
                 if (err) throw err;
-                resolve(result)
+                const resultArr = [...result];
+                for (let i = 0; i < resultArr.length; i++) {
+                    resultArr[i].user_id === userId ?
+                        resultArr[i].updateComment = true
+                    :
+                    resultArr[i].updateComment = false
+                }
+                resolve(resultArr)
             })
         })
     }
@@ -66,18 +80,15 @@ export const getAllArticle = (req, res, next) => {
         const article = await getArticles();
         for (let i = 0; i < article.length; i++) {
             const comments = await getComments(article[i].id)
-            // console.log(comments);
             article[i].comments = comments
-            // console.log(i);
-            // console.log(article[i].id);
+            
             const like = await getLikedPost(article[i].id)
-            console.log(like[0].postLiked);
             like[0].postLiked ?
                 article[i].liked = true
             :
                 article[i].liked = false;
         }
-        res.send({ article })
+        res.status(200).json({ article })
     }
     essai();
 }

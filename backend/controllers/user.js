@@ -69,3 +69,7 @@ export const login = (req, res, next) => {
             })
     })
 };
+
+export const restoreConnection = (req, res, next) => {
+    res.status(200).json({ message: 'Reconnexion réussie'})
+}

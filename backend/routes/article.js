@@ -9,4 +9,5 @@ router.post('/article', auth, multer, createArticle);
 router.get('/getall', auth, getAllArticle);
 
 
+
 export default router;

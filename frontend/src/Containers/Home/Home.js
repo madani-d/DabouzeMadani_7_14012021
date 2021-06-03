@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
 import ArticleForm from '../../Components/ArticleForm/ArticleForm';
@@ -18,6 +19,8 @@ export default function Home() {
     console.log(articles);
 
     const dispatch = useDispatch();
+    const history = useHistory();
+
 
     useEffect(() => {
         dispatch(getArticles());
@@ -25,6 +28,10 @@ export default function Home() {
 
     const handleDeconnection = () => {
         localStorage.removeItem("storageToken");
+        dispatch({
+            type: 'DISCONNECT'
+        })
+        history.push('/');
     }
 
     return (

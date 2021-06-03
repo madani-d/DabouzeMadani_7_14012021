@@ -1,36 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { postArticle } from '../../redux/articles/articleReducer';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 function Formulaire() {
     const [article, setArticle] = useState("");
     const [selectedFile, setSelectedFile] = useState();
     const [preview, setPreview] = useState();
+    const dispatch = useDispatch()
 
     const handleSubmit = event => {
         event.preventDefault();
-        console.log(selectedFile);
-        console.log(selectedFile.type);
 
         const formData = new FormData();
         formData.append("article", article);
         formData.append("file", selectedFile);
         formData.append("userId", JSON.parse(localStorage.storageToken).userId)
 
-        axios.post('http://localhost:5000/api/article',
-        formData,
-        { headers: {
-            "Content-Type": `${selectedFile.type}`,
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        
-        }})
+        dispatch(postArticle(formData, selectedFile.type))
 
-            .then(res => {
-                console.log(res);
-                setArticle("");
-                setSelectedFile();
-                setPreview();
-            })
+        setArticle("");
+        setSelectedFile();
+        setPreview();
     }
 
     const handleFile = e => {

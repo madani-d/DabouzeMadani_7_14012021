@@ -7,7 +7,7 @@ export const createComment = (req, res, next) => {
     let comment = [
         req.body.userId,
         req.body.articleId,
-        `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        // `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         req.body.comment,
         dateJsToSql(),
     ]

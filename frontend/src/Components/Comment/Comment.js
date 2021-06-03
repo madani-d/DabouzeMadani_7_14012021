@@ -2,7 +2,6 @@ import React from 'react';
 
 export default function Comment(props) {
 
-// console.log(props.props.id);
     return (
         <div>
                 <div
@@ -24,6 +23,7 @@ export default function Comment(props) {
                             <h3>{props.commentData.texte_commentaire}</h3>
                         </figcaption>
                     </figure>
+                    {props.commentData.updateComment && <span>Modifier</span> }
                 </div>
             
         </div>

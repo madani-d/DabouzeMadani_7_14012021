@@ -1,34 +1,22 @@
 import React from 'react';
-import { useEffect, useState, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Comment from '../Comment/Comment';
-import axios from 'axios';
+import CommentForm from '../CommentForm/CommentForm'
+import { postLike } from '../../redux/articles/articleReducer';
+import { useDispatch } from 'react-redux';
 
 
 
 
 export default function CardArticle(props) {
 
+    const dispatch = useDispatch();
 
 
     const handleClickLike = (articleId) => {
-        const likeData = {
-            articleId: articleId,
-            userId: JSON.parse(localStorage.storageToken).userId
-        }
-        axios.post('http://localhost:5000/api/article/like',
-            likeData,
-            {
-                headers: {
-                    "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-                }
-            })
-            .then(res => {
-                console.log(res);
-            })
+        dispatch(postLike(articleId))
     }
 
-    console.log(props.comments);
 
     return (
         <div
@@ -56,9 +44,11 @@ export default function CardArticle(props) {
                     }
                 </figcaption>
             </figure>
+            {props.articleData.updateArticle && <span>Modifier</span> }
             {props.articleData.comments.map(item => (
                 <Comment commentData={item} key={uuidv4()} />
             ))}
+            <CommentForm articleId={props.articleData.id}/>
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const INITIAL_ARTICLE_STATE = {
     articles: []
@@ -8,6 +9,7 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
 
     switch(action.type) {
         case 'LOADARTICLES':
+            console.log(action.payload);
             return {
                 articles: action.payload
             }
@@ -33,11 +35,43 @@ export const getArticles = () => dispatch => {
         }}
     )
     .then(res => {
-        console.log(res.data);
+        console.log(res);
         console.log(res.data.article);
         dispatch({
             type: 'LOADARTICLES',
             payload: res.data.article
         })
     })
+
+    .catch(err => console.log(err.response.data.error.message))
 }
+
+export const postArticle = (data, fileType) => dispatch =>{
+    axios.post('http://localhost:5000/api/article',
+        data,
+        { headers: {
+            "Content-Type": `${fileType}`,
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+    }})
+
+        .then(res => {
+            console.log(res);
+            dispatch(getArticles())
+        })
+}
+
+export const postLike = (articleId) => dispatch => {
+    console.log(articleId);
+    axios.post('http://localhost:5000/api/article/like',
+        {articleId},
+        { headers: {
+                "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+    }})
+    .then(res => {
+    console.log(res);
+    dispatch(getArticles());
+})
+}
+
+
+

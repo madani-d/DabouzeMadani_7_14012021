@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import logo from '../../assets/icon-above-font.png'
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const dispatch = useDispatch();
 
     const history = useHistory();
 
@@ -16,7 +18,7 @@ function Login() {
             { email, password })       // Post with each form element value
 
             .then(res => {        
-                console.log(res.data);     // After succes Post clear all form element state 
+                console.log(res);     // After succes Post clear all form element state 
                 setEmail("");
                 setPassword("");
                 const storageToken = { // And add userId and token to localstorage
@@ -24,6 +26,9 @@ function Login() {
                     "token": res.data.token
                 }
                 localStorage.setItem("storageToken", JSON.stringify(storageToken));
+                dispatch({
+                    type: 'CONNECT'
+                })
                 history.push('/home');
             })
     };

@@ -27,11 +27,11 @@ export const sqlGetAllArticle = "SELECT Article.id, Article.user_id, Article.ima
 
 // Comments
 export const sqlCreateComment = "INSERT INTO Commentaire " +
-                                "(user_id, article_id, image_url, texte_commentaire, date_post) " +
-                                "VALUES (?, ?, ?, ?, ?);";
+                                "(user_id, article_id, texte_commentaire, date_post) " +
+                                "VALUES (?, ?, ?, ?);";
 
 export const sqlGetComment =    "SELECT User.avatar, User.nom, User.prenom, " + 
-                                "Commentaire.id, Commentaire.image_url,Commentaire.texte_commentaire " +
+                                "Commentaire.id, Commentaire.image_url,Commentaire.texte_commentaire, Commentaire.user_id " +
                                 "FROM Commentaire " +
                                 "INNER JOIN User " +
                                 "ON Commentaire.user_id = User.id " +

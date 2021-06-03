@@ -1,10 +1,14 @@
+import jwt from 'jsonwebtoken';
 import { db } from '../connectionDB.js';
 import { sqlCreateLikeArticle} from '../utils/scriptSQL.js';
 
 export const createLikeArticle = (req, res, next) => {
-    console.log(req.body);
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
+    const userId = decodedToken.userId;
+    console.log(req.body.articleId);
     const likeArticleData = [
-        req.body.userId,
+        userId,
         req.body.articleId
     ]
 
