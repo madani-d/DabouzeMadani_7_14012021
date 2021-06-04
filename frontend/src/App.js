@@ -13,6 +13,7 @@ export default function App() {
   
   const connected = useSelector(state => state.connectedReducer.connected)
 
+
   if (!connected && localStorage.storageToken) {
     RestoreConnection(JSON.parse(localStorage.storageToken).token)
   }

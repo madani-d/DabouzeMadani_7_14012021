@@ -1,9 +1,14 @@
 import { db } from '../connectionDB.js';
 import dateJsToSql from '../utils/date.js';
-import jwt from 'jsonwebtoken';
-import { sqlCreateArticle, sqlGetAllArticle, sqlGetComment, sqlGetLikedPost } from '../utils/scriptSQL.js';
+import {
+    sqlCreateArticle,
+    sqlGetAllArticle,
+    sqlGetComment,
+    sqlGetLikedArticle,
+    sqlGetLikedComment
+} from '../utils/scriptSQL.js';
 
-
+// Create Article
 
 export const createArticle = (req, res, next) => {
     console.log(req.body);
@@ -24,17 +29,20 @@ export const createArticle = (req, res, next) => {
 
 }
 
-export const getAllArticle = (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
-    const userId = decodedToken.userId;
+// Get all articles
 
+export const getAllArticle = (req, res, next) => {
+    const userId = res.locals.userId;
+
+
+    // Get all articles
     const getArticles = async () => {
         return new Promise((resolve, reject) => {
             db.query(sqlGetAllArticle, (err, result) => {
                     if (err) throw err;
                     const resultArr = [...result];
                     for (let i = 0; i < resultArr.length; i++) {
+                        // If article been create by user get true to updateArticle
                         resultArr[i].user_id === userId ?
                             resultArr[i].updateArticle = true
                         :
@@ -45,12 +53,28 @@ export const getAllArticle = (req, res, next) => {
         }) 
     }
 
+    //Get for each comment if is liked by user
+    const getLikedComment = async (commentId) => {
+        const likesId = [
+            userId,
+            commentId
+        ]
+        return new Promise((resolve, reject) => {
+            db.query(sqlGetLikedComment, likesId, (err, result) => {
+                if (err) throw err;
+                resolve(result)
+            })
+        })
+    }
+
+    // Get comment for each article 
     const getComments = async (articleId) => {
         return new Promise((resolve, reject) => {
             db.query(sqlGetComment, articleId, (err, result) => {
                 if (err) throw err;
                 const resultArr = [...result];
                 for (let i = 0; i < resultArr.length; i++) {
+                        // If comment been/not create by user put true/false to updateComment
                     resultArr[i].user_id === userId ?
                         resultArr[i].updateComment = true
                     :
@@ -61,14 +85,14 @@ export const getAllArticle = (req, res, next) => {
         })
     }
 
-    const getLikedPost = async (articleId) => {
+    //Get for each article if is liked by user
+    const getLikedArticle = async (articleId) => {
         const likesId = [
             userId,
             articleId
         ]
-        console.log(likesId);
         return new Promise((resolve, reject) => {
-            db.query(sqlGetLikedPost, likesId, (err, result) => {
+            db.query(sqlGetLikedArticle, likesId, (err, result) => {
                 if (err) throw err;
                 resolve(result)
             })
@@ -76,19 +100,32 @@ export const getAllArticle = (req, res, next) => {
 
     }
 
-    const essai = async () => {
+    const sendData = async () => {
+        // get all article
         const article = await getArticles();
         for (let i = 0; i < article.length; i++) {
+            // Get all comment for each article
             const comments = await getComments(article[i].id)
+            for (let k = 0; k < comments.length; k++) {
+                const liked = await getLikedComment(comments[k].id)
+
+                // If comment is/not liked by user put true/false to commentLiked
+                liked[0].commentLiked ?
+                    comments[k].commentLiked = true
+                :
+                    comments[k].commentLiked = false
+            }
+            // Put comments to each articles
             article[i].comments = comments
-            
-            const like = await getLikedPost(article[i].id)
-            like[0].postLiked ?
+
+            const like = await getLikedArticle(article[i].id)
+            // If article is/not liked by user put true/false to liked
+            like[0].articleLiked ?
                 article[i].liked = true
             :
                 article[i].liked = false;
         }
         res.status(200).json({ article })
     }
-    essai();
+    sendData();
 }

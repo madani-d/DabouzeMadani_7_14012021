@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 
 const INITIAL_ARTICLE_STATE = {
     articles: []
@@ -60,18 +59,7 @@ export const postArticle = (data, fileType) => dispatch =>{
         })
 }
 
-export const postLike = (articleId) => dispatch => {
-    console.log(articleId);
-    axios.post('http://localhost:5000/api/article/like',
-        {articleId},
-        { headers: {
-                "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-    }})
-    .then(res => {
-    console.log(res);
-    dispatch(getArticles());
-})
-}
+
 
 
 

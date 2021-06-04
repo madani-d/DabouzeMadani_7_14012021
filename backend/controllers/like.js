@@ -1,23 +1,71 @@
-import jwt from 'jsonwebtoken';
 import { db } from '../connectionDB.js';
-import { sqlCreateLikeArticle} from '../utils/scriptSQL.js';
+import {
+    sqlLikeArticle,
+    sqlLikeComments,
+    sqlRemoveLikedArticle,
+    sqlRemoveLikedComment
+} from '../utils/scriptSQL.js';
 
 export const createLikeArticle = (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
-    const userId = decodedToken.userId;
-    console.log(req.body.articleId);
     const likeArticleData = [
-        userId,
+        res.locals.userId,
         req.body.articleId
     ]
 
     db.query(
-        sqlCreateLikeArticle,
+        sqlLikeArticle,
         likeArticleData,
         (err, result) => {
             if (err) throw err;
             console.log(result);
             res.status(200).json({ message: "Like ajouté!" })
         })
+}
+
+export const removeLikeArticle = (req, res, next) => {
+    const removeLikeData = [
+        res.locals.userId,
+        req.body.articleId
+    ]
+
+    db.query(
+        sqlRemoveLikedArticle,
+        removeLikeData,
+        (err, result)=> {
+            if (err) throw err;
+            res.status(201).json({ message: "like supprimé" })
+        }
+    )
+}
+
+export const createLikeComment = (req, res, next) => {
+    const likeArticleData = [
+        res.locals.userId,
+        req.body.commentId
+    ]
+
+    db.query(
+        sqlLikeComments,
+        likeArticleData,
+        (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.status(200).json({ message: "Like ajouté!" })
+        })
+}
+
+export const removeLikeComment = (req, res, next) => {
+    const removeLikeData = [
+        res.locals.userId,
+        req.body.commentId
+    ]
+
+    db.query(
+        sqlRemoveLikedComment,
+        removeLikeData,
+        (err, result)=> {
+            if (err) throw err;
+            res.status(201).json({ message: "like supprimé" })
+        }
+    )
 }

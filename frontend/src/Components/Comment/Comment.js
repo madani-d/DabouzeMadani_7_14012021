@@ -1,6 +1,18 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { likeComment, unlikeComment } from '../../redux/likeReducer';
 
 export default function Comment(props) {
+
+    const dispatch = useDispatch();
+
+    const handleLike = (commentId) => {
+        dispatch(likeComment(commentId));
+    }
+
+    const handleUnlike = (commentId) => {
+        dispatch(unlikeComment(commentId));
+    }
 
     return (
         <div>
@@ -24,6 +36,11 @@ export default function Comment(props) {
                         </figcaption>
                     </figure>
                     {props.commentData.updateComment && <span>Modifier</span> }
+                    {props.commentData.commentLiked ?
+                        <button onClick={() => handleUnlike(props.commentData.id)}>👍</button>
+                    :
+                        <button onClick={() => handleLike(props.commentData.id)}>J'aime</button>
+                    }
                 </div>
             
         </div>

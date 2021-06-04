@@ -37,12 +37,31 @@ export const sqlGetComment =    "SELECT User.avatar, User.nom, User.prenom, " +
                                 "ON Commentaire.user_id = User.id " +
                                 "WHERE Commentaire.article_id = ? ;";
 
-//LikePost
-export const sqlCreateLikeArticle = "INSERT INTO Likepost" +
+//LikePost Articles
+export const sqlLikeArticle = "INSERT INTO Likepost" +
                                     "(user_id, article_id)" +
                                     "VALUES (?, ?);";
 
-export const sqlGetLikedPost = "SELECT COUNT(*) AS postLiked " +
+export const sqlRemoveLikedArticle =    "DELETE FROM Likepost " +
+                                        "WHERE user_id = ? " +
+                                        "AND article_id = ? ;";
+
+export const sqlGetLikedArticle = "SELECT COUNT(*) AS articleLiked " +
                             "FROM Likepost " +
                             "WHERE user_id = ? " + 
                             "AND article_id = ? ;";
+
+//LikePost Comments
+
+export const sqlLikeComments = "INSERT INTO Likepost" +
+                                    "(user_id, commentaire_id)" +
+                                    "VALUES (?, ?);";
+
+export const sqlRemoveLikedComment =    "DELETE FROM Likepost " +
+                                        "WHERE user_id = ? " +
+                                        "AND commentaire_id = ? ;";
+
+export const sqlGetLikedComment = "SELECT COUNT(*) AS commentLiked " +
+                            "FROM Likepost " +
+                            "WHERE user_id = ? " + 
+                            "AND commentaire_id = ? ;";

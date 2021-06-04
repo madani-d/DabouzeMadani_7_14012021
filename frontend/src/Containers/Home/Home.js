@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
 import ArticleForm from '../../Components/ArticleForm/ArticleForm';
 import CardArticle from '../../Components/CardArticle/CardArticle';
+import Navbar from '../../Components/Navbar/Navbar';
 import {v4 as uuidv4} from 'uuid';
 
 
@@ -35,14 +36,17 @@ export default function Home() {
     }
 
     return (
-        <div className="test-block">
+        < >
+            <Navbar/>
             <ArticleForm/>
-            {articles.map(item => (
-                <CardArticle articleData={item} key={uuidv4()}/>
-                
-            ))}
+            <div className="test-block">
+                {articles.map(item => (
+                    <CardArticle articleData={item} key={uuidv4()}/>
+                ))}
+            </div>
+
             <button onClick={handleDeconnection}>Déconnexion</button>
-        </div>
+        </>
 
     )
 }
