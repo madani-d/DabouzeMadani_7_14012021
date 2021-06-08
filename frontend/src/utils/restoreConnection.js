@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 export const RestoreConnection = (token) => {
     const dispatch = useDispatch()
-    axios('http://localhost:5000/api/auth/restoreConnection',
+    axios(`${process.env.REACT_APP_API_URL}/api/auth/restoreConnection`,
     { headers : {
         "authorization": "Bearer " + token,
         }}

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import logo from '../../assets/icon-above-font.png'
+require('dotenv').config();
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://localhost:5000/api/auth/login',
+        axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`,
             { email, password })       // Post with each form element value
 
             .then(res => {        

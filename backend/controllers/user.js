@@ -2,12 +2,21 @@ import { db } from '../connectionDB.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dateJsToSql from '../utils/date.js';
-import { sqlCheckEmail, sqlSignin, sqllogin } from '../utils/scriptSQL.js';
+import {
+    sqlCheckEmail,
+    sqlSignin,
+    sqllogin,
+    sqlGetAllUsers
+} from '../utils/scriptSQL.js';
 
 
 export const signin = (req, res, next) => {
     const user = [];// Create array to fill SQL request
-    db.query(sqlCheckEmail, req.body.email, (err, result) => {
+    db.query(
+        sqlCheckEmail,
+        req.body.email,
+        (err, result) => {
+
         if (err) throw err;
 
         if (result[0].present > 0) {// Check if email already exist or not in DB
@@ -43,13 +52,19 @@ export const signin = (req, res, next) => {
 export const login = (req, res, next) => {
     console.log(req.body);
 
-    db.query(sqlCheckEmail, req.body.email, (err, result) => {// Check is email already exist in DB
+    db.query(
+        sqlCheckEmail,
+        req.body.email,
+        (err, result) => {// Check is email already exist in DB
             if (err) throw err;
             if (!result[0].present) {// If not 
                 return res.status(401).json({ message: "Utilisateur non trouvé." });
             }// If yes
 
-            db.query(sqllogin, req.body.email, (err, result, fields) => {// Recover password and id
+            db.query(
+                sqllogin,
+                req.body.email,
+                (err, result) => {// Recover password and id
                 if (err) throw err;
                 bcrypt.compare(req.body.password, result[0].mdp)// Compare Emails
                     .then(valid => {
@@ -72,4 +87,14 @@ export const login = (req, res, next) => {
 
 export const restoreConnection = (req, res, next) => {
     res.status(200).json({ message: 'Reconnexion réussie'})
+}
+
+export const getAllUsers = (req, res, next) => {
+    db.query(
+        sqlGetAllUsers,
+        (err, result) => {
+            if (err) throw err;
+            res.status(200).json({ result })
+        }
+    )
 }

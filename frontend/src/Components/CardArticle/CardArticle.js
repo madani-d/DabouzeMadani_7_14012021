@@ -2,7 +2,7 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Comment from '../Comment/Comment';
 import CommentForm from '../CommentForm/CommentForm'
-import { likeArticle, unlikeArticle } from '../../redux/likeReducer';
+import { likeArticle, unlikeArticle } from '../../redux/articles/articleReducer';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -11,12 +11,12 @@ export default function CardArticle(props) {
 
     const dispatch = useDispatch();
 
-    const handleLike = (articleId) => {
-        dispatch(likeArticle(articleId))
+    const handleLike = (articleId, index) => {
+        dispatch(likeArticle(articleId, index))
     }
 
-    const handleUnlike = (articleId) => {
-        dispatch(unlikeArticle(articleId))
+    const handleUnlike = (articleId, index) => {
+        dispatch(unlikeArticle(articleId, index))
     }
 
     return (
@@ -44,17 +44,17 @@ export default function CardArticle(props) {
                     alt={props.articleData.texte_article}/>
                 <figcaption className="caption">
                     <h3>{props.articleData.texte_article}</h3>
-                    like : {props.articleData.likepost}
+                    like : {props.articleData.articleLikes}
                     {props.articleData.liked ?
-                        <button onClick={() => handleUnlike(props.articleData.id)}>👍</button>
+                        <button onClick={() => handleUnlike(props.articleData.id, props.index)}>👍</button>
                         :
-                        <button onClick={() => handleLike(props.articleData.id)}>J'aime</button>
+                        <button onClick={() => handleLike(props.articleData.id, props.index)}>J'aime</button>
                     }
                 </figcaption>
             </figure>
             {props.articleData.updateArticle && <span>Modifier</span> }
-            {props.articleData.comments.map(item => (
-                <Comment commentData={item} key={uuidv4()} />
+            {props.articleData.comments.map((item, index) => (
+                <Comment commentData={item} index={index} articleId={props.index} key={uuidv4()} />
             ))}
             <CommentForm articleId={props.articleData.id}/>
         </div>

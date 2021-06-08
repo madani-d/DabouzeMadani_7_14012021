@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { postArticle } from '../../redux/articles/articleReducer';
+import './ArticleForm.css'
 
 // import axios from 'axios';
 
@@ -34,21 +35,21 @@ function Formulaire() {
     }
 
     return (
-        <form className="formulaireImage" onSubmit={handleSubmit}>
+        <form className="form-article" onSubmit={handleSubmit}>
             <label htmlFor="article">Créer un article</label>
             <input
                 type="text"
                 id="article"
                 value={article}
                 onChange={(e) => setArticle(e.target.value)} />
-            <label htmlFor="image"></label>
+            <label htmlFor="image">IMAGE</label>
             <input
                 type="file"
                 id="image"
                 name="file"
                 onChange={(e) => handleFile(e)}
                 />
-            <img src={preview} alt="preview" className="preview"/>
+            {preview && <img src={preview} alt="preview" className="preview"/>}
             <button>Publier</button>
         </form>
     )

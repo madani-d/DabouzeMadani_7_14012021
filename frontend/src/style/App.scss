@@ -18,19 +18,19 @@ body, html {
     flex-direction: column;
     width: 50%;
     margin: 0 auto;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 
 .test-item {
-    margin: 50px 0 50px 0;
+    margin: 50px auto 50px;
     border: 1px solid black;
     border-radius: 25px;
     overflow: hidden;
+    width: 95%;
 
 }
 
-.formulaireImage {
-    margin: 20px 0 50px 0;
-}
 
 // .connection {
 //     width: 50%;

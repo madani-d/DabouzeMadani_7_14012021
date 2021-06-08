@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
 
 export default function CommentForm(props) {
@@ -18,7 +18,7 @@ export default function CommentForm(props) {
         formData.append("articleId", props.articleId);
         formData.append("comment", comm);
 
-        axios.post("http://localhost:5000/api/comment",
+        axios.post(`${process.env.REACT_APP_API_URL}/api/comment`,
             formData,
             { headers: {
                 "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,

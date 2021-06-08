@@ -109,11 +109,11 @@ export const getAllArticle = (req, res, next) => {
             for (let k = 0; k < comments.length; k++) {
                 const liked = await getLikedComment(comments[k].id)
 
-                // If comment is/not liked by user put true/false to commentLiked
-                liked[0].commentLiked ?
-                    comments[k].commentLiked = true
+                // If comment is/not liked by user put true/false to liked
+                liked[0].liked ?
+                    comments[k].liked = true
                 :
-                    comments[k].commentLiked = false
+                    comments[k].liked = false
             }
             // Put comments to each articles
             article[i].comments = comments

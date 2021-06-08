@@ -17,7 +17,7 @@ export const sqlCreateArticle = "INSERT INTO Article " +
 
 export const sqlGetAllArticle = "SELECT Article.id, Article.user_id, Article.image_url, " +
                                 "Article.texte_article, Article.date_post, " +
-                                "count(Likepost.article_id) AS likepost, User.avatar, User.nom, User.prenom " + 
+                                "COUNT(Likepost.article_id) AS articleLikes, User.avatar, User.nom, User.prenom " + 
                                 "FROM Article " +
                                 "LEFT JOIN Likepost " +
                                 "ON Article.id = Likepost.article_id " +
@@ -25,17 +25,22 @@ export const sqlGetAllArticle = "SELECT Article.id, Article.user_id, Article.ima
                                 "ON Article.user_id = User.id " +
                                 "GROUP BY Article.id ORDER BY date_post DESC;";
 
+
 // Comments
 export const sqlCreateComment = "INSERT INTO Commentaire " +
                                 "(user_id, article_id, texte_commentaire, date_post) " +
                                 "VALUES (?, ?, ?, ?);";
 
 export const sqlGetComment =    "SELECT User.avatar, User.nom, User.prenom, " + 
-                                "Commentaire.id, Commentaire.image_url,Commentaire.texte_commentaire, Commentaire.user_id " +
+                                "Commentaire.id, Commentaire.image_url,Commentaire.texte_commentaire, Commentaire.user_id, " +
+                                "COUNT(Likepost.commentaire_id) AS commentLikes " +
                                 "FROM Commentaire " +
+                                "LEFT JOIN Likepost " +
+                                "ON Commentaire.id = Likepost.commentaire_id " +
                                 "INNER JOIN User " +
                                 "ON Commentaire.user_id = User.id " +
-                                "WHERE Commentaire.article_id = ? ;";
+                                "WHERE Commentaire.article_id = ? " +
+                                "GROUP BY Commentaire.id;";
 
 //LikePost Articles
 export const sqlLikeArticle = "INSERT INTO Likepost" +
@@ -61,7 +66,13 @@ export const sqlRemoveLikedComment =    "DELETE FROM Likepost " +
                                         "WHERE user_id = ? " +
                                         "AND commentaire_id = ? ;";
 
-export const sqlGetLikedComment = "SELECT COUNT(*) AS commentLiked " +
+export const sqlGetLikedComment = "SELECT COUNT(*) AS liked " +
                             "FROM Likepost " +
                             "WHERE user_id = ? " + 
                             "AND commentaire_id = ? ;";
+
+// Users
+
+export const sqlGetAllUsers =   "SELECT id, prenom, nom, avatar, date_signin " +
+                                "FROM User " +
+                                "ORDER BY date_signin DESC;";

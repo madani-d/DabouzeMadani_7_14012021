@@ -1,22 +1,24 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
+import { getUsers } from '../../redux/usersReducer/usersReduser';
 import ArticleForm from '../../Components/ArticleForm/ArticleForm';
 import CardArticle from '../../Components/CardArticle/CardArticle';
-import Navbar from '../../Components/Navbar/Navbar';
+import Header from '../../Components/Navbar/Header';
 import {v4 as uuidv4} from 'uuid';
 
 
 export default function Home() {
-    const token = JSON.parse(localStorage.storageToken).token;
-    const userId = JSON.parse(localStorage.storageToken).userId;
 
     const { articles } = useSelector(state => ({
         ...state.articleReducer
     }))
 
+    const { users } = useSelector(state => ({
+        ...state.usersReducer
+    }))
     console.log(articles);
 
     const dispatch = useDispatch();
@@ -25,8 +27,10 @@ export default function Home() {
 
     useEffect(() => {
         dispatch(getArticles());
-    }, [])
-
+        dispatch(getUsers());
+    }, [dispatch])
+    
+    console.log(users);
     const handleDeconnection = () => {
         localStorage.removeItem("storageToken");
         dispatch({
@@ -36,12 +40,12 @@ export default function Home() {
     }
 
     return (
-        < >
-            <Navbar/>
-            <ArticleForm/>
+        <>
+            <Header/>
             <div className="test-block">
-                {articles.map(item => (
-                    <CardArticle articleData={item} key={uuidv4()}/>
+            <ArticleForm/>
+                {articles.map((item, index) => (
+                    <CardArticle articleData={item} index={index} key={uuidv4()}/>
                 ))}
             </div>
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import CardArticle from '../../Components/CardArticle/CardArticle';
+import {v4 as uuidv4} from 'uuid';
 
 
 export default function Profile() {
@@ -19,7 +21,7 @@ export default function Profile() {
             {
                 articles.map(item => (
                     (location.state.userId === item.user_id) &&
-                    <h2>{item.texte_article}</h2>
+                    <CardArticle articleData={item} key={uuidv4()}/>
                 ))
             }
         </>

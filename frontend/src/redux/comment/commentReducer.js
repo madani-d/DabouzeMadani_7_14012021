@@ -23,7 +23,7 @@ export default commentReducer;
 
 export const getComment = (articleId) => dispatch => {
 
-    axios(`http://localhost:5000/api/getComment/` + articleId,
+    axios(`${process.env.REACT_APP_API_URL}/api/getComment/` + articleId,
         { headers: {
             "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
         }}
