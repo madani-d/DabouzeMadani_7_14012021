@@ -5,6 +5,7 @@ import CommentForm from '../CommentForm/CommentForm'
 import { likeArticle, unlikeArticle } from '../../redux/articles/articleReducer';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import './CardArticle.scss';
 
 
 export default function CardArticle(props) {
@@ -21,7 +22,7 @@ export default function CardArticle(props) {
 
     return (
         <div
-            className="test-item">
+            className="article-card">
             <h2>
                 <Link to={{
                     pathname: `/profile/${props.articleData.prenom}-${props.articleData.nom}`,

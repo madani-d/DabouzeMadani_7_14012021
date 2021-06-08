@@ -1,5 +1,5 @@
 import React from 'react';
-import {  useEffect } from 'react';
+import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
@@ -8,6 +8,7 @@ import ArticleForm from '../../Components/ArticleForm/ArticleForm';
 import CardArticle from '../../Components/CardArticle/CardArticle';
 import Header from '../../Components/Navbar/Header';
 import {v4 as uuidv4} from 'uuid';
+import './Home.scss';
 
 
 export default function Home() {
@@ -42,12 +43,12 @@ export default function Home() {
     return (
         <>
             <Header/>
-            <div className="test-block">
+            <section className="thread">
             <ArticleForm/>
                 {articles.map((item, index) => (
                     <CardArticle articleData={item} index={index} key={uuidv4()}/>
                 ))}
-            </div>
+            </section>
 
             <button onClick={handleDeconnection}>Déconnexion</button>
         </>

@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import './Header.scss';
+import ModalSearch from '../ModalSearch/ModalSearch';
 import Logo from '../../assets/icon-left-font-monochrome-black.svg';
 import WhiteLogo from '../../assets/icon-left-font-monochrome-white.svg';
 import search from '../../assets/search-solid.svg';
 
 export default function Header() {
+    const { users } = useSelector(state => ({
+        ...state.usersReducer
+    }))
+    const usersName = [...users];
+    for (const userName of usersName) {
+        userName.completName = userName.prenom + " " + userName.nom
+    }
+
     const [ windowWidth, setWindowWidth ] = useState(window.innerWidth);
-    const [ toggleSearch, setToggleSearch ] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResult, setSearchResult] = useState([]);
+    const [modalSearch, setModalSearch] = useState(false);
 
     useEffect(() => {
         const changeWidth = () => {
@@ -22,8 +35,21 @@ export default function Header() {
     }, [windowWidth])
 
     const handleToggleSearch = () => {
-        setToggleSearch(!toggleSearch);
+        setModalSearch(!modalSearch);
+        setSearchTerm("");
     }
+
+
+    useEffect(() => {
+        console.log(usersName);
+        const result = usersName.filter(user =>
+            user.completName.includes(searchTerm)
+        );
+        searchTerm === "" ?
+            setSearchResult([])
+        :
+            setSearchResult(result)
+    }, [searchTerm])
 
 
 
@@ -36,7 +62,31 @@ export default function Header() {
                     <li className="items">Fil d'actualité</li>
                     <li className="items">Mon profil</li>
                 </ul>
-                <input type="text" id="search-bar" className="search" placeholder="Rechercher"/>
+                <div className="search-container">
+                    <input
+                        type="text"
+                        id="search-bar"
+                        className="search"
+                        placeholder="Rechercher"
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                        />
+                    <ul className="search-liste">
+                        {searchResult.map((item, index) => (
+                            <li key={index}>
+                                <Link to={{
+                                    pathname: `/profile/${item.prenom}-${item.nom}`,
+                                    state: {
+                                        userId: item.id
+                                    }
+                                }}>
+                                    <img src={item.avatar} alt={`avatar de ${item.completName}`} className="search-liste-avatar"/>
+                                    {item.prenom} {item.nom}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </nav>
         :
             <>
@@ -44,14 +94,20 @@ export default function Header() {
                     <img src={WhiteLogo} alt="logo Groupomania" className="nav-logo-small"/>
                 </div>
                 <nav className="nav-small">
-                    <ul className="liste">
+                    <ul className="liste liste-small">
                         <li className="items">Fil d'actualité</li>
                         <li className="items">Mon profil</li>
-                        <label htmlFor="search-bar-small" ><img src={search} alt="search button" onClick={handleToggleSearch} className="search-icon items" /></label>
-                    <input type="text" id="search-bar-small" className={toggleSearch && "search-small"} placeholder="Rechercher"/>
+                        <li><img src={search} alt="search button" onClick={handleToggleSearch} className="search-icon items" /></li>
                     </ul>
                 </nav>
-
+                {modalSearch &&
+                    <ModalSearch
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        searchResult={searchResult}
+                        handleToggleSearch={handleToggleSearch}
+                    />
+                }
             </>
         }
         </>
