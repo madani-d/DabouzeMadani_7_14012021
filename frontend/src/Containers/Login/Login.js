@@ -2,7 +2,11 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import logo from '../../assets/icon-above-font.png'
+import logo from '../../assets/without-icon.svg';
+import icon from '../../assets/icon.svg';
+import './Login.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAt, faLock } from '@fortawesome/free-solid-svg-icons';
 require('dotenv').config();
 
 function Login() {
@@ -36,26 +40,42 @@ function Login() {
 
 
     return (
-        <div className="login">
-        <img src={logo} alt='logo groupomania'/>
-            <form className="login_form" onSubmit={handleSubmit}>
-                <h1>Deja inscrit</h1>
-                <label htmlFor="email1">Email</label>
-                <input
-                    type="text"
-                    id="email1"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)} />
+        <div className="connection-container">
+            <div className="icon-container">
+                <img src={icon} alt='logo groupomania' className="icon"/>
+            </div>
+            <img src={logo} alt='logo groupomania' className="login-logo"/>
+                <form className="login_form" onSubmit={handleSubmit}>
+                <div className="input-container">
+                    <span className="input-icon">
+                        
+                        <FontAwesomeIcon icon={faAt}/>
+                    </span>
+                    <input
+                        type="text"
+                        id="email1"
+                        aria-label="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)} />
+                </div>
 
-                <label htmlFor="password1">Mot de passe</label>
-                <input
-                    type="text"
-                    id="password1"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)} />
-                <button>Connexion</button>
-            </form>
-        <button onClick={() => history.push('/signin')}>Créer un compte</button>
+                <div className="input-container">
+                    <span className="input-icon">
+                        <FontAwesomeIcon icon={faLock}/>
+                    </span>
+                    <input
+                        type="text"
+                        id="password1"
+                        aria-label="mot de passe"
+                        placeholder="Mot de passe"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)} />
+                </div>
+                    <button>Connexion</button>
+                </form>
+                <p>Ou</p>
+            <button onClick={() => history.push('/signin')}>Créer un compte</button>
         </div>
     )
 };

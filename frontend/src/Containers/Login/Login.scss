@@ -1,0 +1,103 @@
+.connection-container {
+    text-align: center;
+    margin: 180px auto 0;
+    max-width: 90%;
+    width: 600px;
+    background: #dde1e7;
+    border-radius: 10px;
+    padding: 40px 30px 10px;
+    box-shadow:
+        -3px -3px 7px #ffffff73,
+        2px 2px 5px rgba(94, 104, 121, 0.288);
+    @media (max-height: 820px) {
+        margin: 80px auto 0;
+    }
+}
+
+.icon {
+    width: 100%;
+    height: 100%;
+    &-container {
+        width: 180px;
+        height: 180px;
+        margin: -100px auto 0;
+        background: #f1eeee;
+        border-radius: 50%;
+        box-shadow: 
+        // 0px 0px 0px 5px #ecf0f3,
+        8px 8px 15px #a7aaaf,
+        -3px -3px 15px #ffffff;
+        @media (max-height: 820px) {
+            width: 90px;
+            height: 90px;
+        }
+    }
+}
+
+.input-container {
+    height: 50px;
+    width: 100%;
+    position: relative;
+    margin-top: 20px;
+    & .info-password {
+        font-size: 16px;
+        text-align: start;
+        color: #595959;
+    }
+    &:last-child {
+        margin-bottom: 40px;
+    }
+    & input {
+        height: 100%;
+        width: 100%;
+        padding-left: 45px;
+        font-size: 18px;
+        outline: none;
+        border: none;
+        color: #595959;
+        background: #dde1e7;
+        border-radius: 25px;
+        box-shadow: inset 2px 2px 5px #babecc,
+                    inset -5px -5px 10px #ffffff73;
+        &:invalid {
+            border: 1px solid red;
+        }
+        &:focus {
+            box-shadow: 2px 2px 5px #babecc,
+                        -1px -1px 2px #ffffff73;
+        }
+    }
+}
+
+.input-icon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #595959;
+}
+
+.connection-container button {
+    display: block;
+    margin: 25px auto;
+    width: 50%;
+    height: 50px;
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    background: #dde1e7;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 25px;
+    box-shadow: 2px 2px 5px #babecc,
+                -5px -5px 10px #ffffff73;
+    &:focus {
+        color: #3498db;
+        box-shadow: 2px 2px 5px #babecc,
+                    -5px -5px 10px #ffffff73;
+    }
+}
