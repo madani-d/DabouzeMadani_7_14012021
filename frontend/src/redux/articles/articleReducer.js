@@ -15,41 +15,29 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
         case 'LIKEARTICLE':
             console.log(state.articles);
             const likeArticles = [...state.articles];
-            likeArticles[action.payload].liked = true;
-            likeArticles[action.payload].articleLikes++;
+            const article = likeArticles[action.payload];
+            article.liked = !article.liked;
+            article.liked ? 
+                article.articleLikes++
+            :
+            article.articleLikes--;
 
             return {
                 articles: likeArticles
             }
 
-        case 'UNLIKEARTICLE':
-            console.log(state.articles);
-            const unlikeArticles = [...state.articles];
-            unlikeArticles[action.payload].liked = false;
-            unlikeArticles[action.payload].articleLikes--;
-    
-            return {
-                articles: unlikeArticles
-            }
-
         case 'LIKECOMMENT':
             console.log('like');
             const likeComment = [...state.articles];
-            likeComment[action.articleId].comments[action.payload].liked = true;
-            likeComment[action.articleId].comments[action.payload].commentLikes++;
+            const comment = likeComment[action.articleId].comments[action.payload];
+            comment.liked = !comment.liked;
+            comment.liked ?
+                comment.commentLikes++
+            :
+                comment.commentLikes--;
+
             return {
                 articles: likeComment
-            }
-
-        case 'UNLIKECOMMENT':
-            console.log('unlike');
-            const unlikeComment = [...state.articles];
-            unlikeComment[action.articleId].comments[action.payload].liked = false;
-            unlikeComment[action.articleId].comments[action.payload].commentLikes--;
-            console.log(unlikeComment[action.payload]);
-
-            return {
-                articles: unlikeComment
             }
 
         default:
@@ -94,72 +82,72 @@ export const postArticle = (data, fileType) => dispatch =>{
 }
 
 
-export const likeArticle = (articleId, index) => dispatch => {
+export const likeArticle = (articleId, index, likeValue) => dispatch => {
     console.log(articleId);
-    axios.post(`${process.env.REACT_APP_API_URL}/api/article/likeArticle`,
-        {articleId},
-        { headers: {
+    if (likeValue) {
+        axios.post(`${process.env.REACT_APP_API_URL}/api/article/unlikeArticle`,
+            {articleId},
+            { headers: {
                 "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
-    )
-    .then(res => {
-    console.log(res);
-    dispatch({
-        type: 'LIKEARTICLE',
-        payload: index
-    })
-    })
+            }}
+        )
+        .then(res => {
+            console.log(res);
+            dispatch({
+                type: 'LIKEARTICLE',
+                payload: index
+                })
+            })
+    } else {
+        axios.post(`${process.env.REACT_APP_API_URL}/api/article/likeArticle`,
+            {articleId},
+            { headers: {
+                    "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+            }}
+        )
+        .then(res => {
+            console.log(res);
+            dispatch({
+                type: 'LIKEARTICLE',
+                payload: index
+                })
+            })
+    }
 };
 
-export const unlikeArticle = (articleId, index) => dispatch =>{
-    axios.post(`${process.env.REACT_APP_API_URL}/api/article/unlikeArticle`,
-        {articleId},
-        { headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
-    )
-    .then(res => {
-        console.log(res);
-        dispatch({
-            type: 'UNLIKEARTICLE',
-            payload: index
+export const likeComment = (commentId, index, articleId, likeValue) => dispatch => {
+    if (likeValue) {
+        axios.post(`${process.env.REACT_APP_API_URL}/api/article/likeComment`,
+            {commentId},
+            { headers: {
+                    "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+            }}
+        )
+        .then(res => {
+            console.log(res);
+            dispatch({
+                type: 'LIKECOMMENT',
+                payload: index,
+                articleId: articleId
+            });
         })
-    })
-}
-
-export const likeComment = (commentId, index, articleId) => dispatch => {
-    axios.post(`${process.env.REACT_APP_API_URL}/api/article/likeComment`,
-        {commentId},
-        { headers: {
+    } else {
+        axios.post(`${process.env.REACT_APP_API_URL}/api/article/unlikeComment`,
+            {commentId},
+            { headers: {
                 "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
-    )
-    .then(res => {
-    console.log(res);
-    dispatch({
-        type: 'LIKECOMMENT',
-        payload: index,
-        articleId: articleId
-    });
-    })
+            }}
+        )
+        .then(res => {
+            console.log(res);
+            dispatch({
+                type: 'LIKECOMMENT',
+                payload: index,
+                articleId: articleId
+            });
+        })
+    }
 };
-
-export const unlikeComment = (commentId, index, articleId) => dispatch =>{
-    axios.post(`${process.env.REACT_APP_API_URL}/api/article/unlikeComment`,
-        {commentId},
-        { headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
-    )
-    .then(res => {
-        console.log(res);
-        dispatch({
-            type: 'UNLIKECOMMENT',
-            payload: index,
-            articleId: articleId
-        });
-    })
-}
 
 
 

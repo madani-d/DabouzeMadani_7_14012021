@@ -1,8 +1,102 @@
 .article-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    width: 50%;
-    margin: 0 auto;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
+    width: 90%;
+    margin: 90px auto 0;
+    border-radius: 0 10px 10px 10px;
+    background: #dde1e7;
+    box-shadow:
+    -3px -3px 7px #ffffff73,
+    2px 2px 5px rgba(94, 104, 121, 0.288);
+    padding: 10px;
+    &-title {
+        font-size: 2em;
+    }
+    @media (max-width: 1024px) {
+        width: 90%;
+    }
+}
+
+.card-header {
+    position: absolute;
+    top: -71px;
+    left: 0;
+    padding: 15px 10px;
+    display: flex;
+    justify-content: center;
+    background: #dde1e7;
+    border-radius: 10px 10px 0 0;
+    box-shadow: -3px -3px 7px #ffffff73;
+    & h2 {
+        display: inline;
+    }
+}
+
+.article-card-picture {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(94, 104, 121, 0.288);
+    // object-fit: center;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    box-shadow:
+    -3px -3px 7px #ffffff73,
+    2px 2px 5px rgba(94, 104, 121, 0.288);
+}
+
+.article-card-footer {
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.article-card-footer button {
+    border: none;
+    outline: none;
+    background: #dde1e7;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #babecc,
+                -5px -5px 10px #ffffff73;
+    &:focus {
+        box-shadow: 2px 2px 5px #babecc,
+                    -5px -5px 10px #ffffff73;
+    }
+}
+
+.like-icon {
+    vertical-align: middle;
+    margin-right: 15px;
+    height: 30px;
+    width: 30px!important;
+    // background: #dde1e7;
+}
+
+.liked {
+    color: #026ee1;
+}
+
+.unliked {
+    color: #595959;
+}
+
+.option-article {
+    width: 50px;
+    height: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
 }

@@ -1,6 +1,6 @@
 import { faAt, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../../assets/without-icon.svg';
@@ -11,6 +11,7 @@ function Signin({  setUserId, setToken, setIsLogin }) {
     const [prenom, setPrenom] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordValid, setPasswordValid] = useState(true)
 
     const history = useHistory();
 
@@ -20,6 +21,14 @@ function Signin({  setUserId, setToken, setIsLogin }) {
             console.log('vide');
             e.placeholder = "Champ obligatoire";
             e.required = true;
+        }
+        if(e.id === "password") {
+            if(e.value.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9]{8,})$/) === null) {
+                e.required = true;
+                setPasswordValid(false);
+            } else {
+                setPasswordValid(true);
+            }
         }
     }
 
@@ -111,7 +120,15 @@ function Signin({  setUserId, setToken, setIsLogin }) {
                         onChange={(e) => setPassword(e.target.value)}
                         onBlur={(e) => handleBlur(e.target)}
                         />
-                    <p className="info-password">*Min 8 caractères dont 1 minuscule, 1 majuscule, 1 chiffre</p>
+                    <p 
+                        className={
+                            passwordValid ?
+                                "info-password"
+                            :
+                                "info-password-invalid"
+                            }
+                    >
+                        *Min 8 caractères dont 1 minuscule, 1 majuscule, 1 chiffre</p>
                 </div>
 
                     <button >S'inscrire</button>

@@ -3,6 +3,9 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
+import './CommentForm.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 export default function CommentForm(props) {
 
@@ -33,16 +36,25 @@ export default function CommentForm(props) {
     }
 
     return (
-        <div>
-            <form onSubmit={(e) => handleSubmit(e)}>
-                <label htmlFor="comment-form">Ajouter un commentaire</label>
+        <>
+            <form 
+                onSubmit={(e) => handleSubmit(e)}
+                className="comment-form"
+            >
                 <input
                 value={comm}
                 onChange={(e) => setComm(e.target.value)}
                 type="text"
-                id="comment-form" />
-                <button>Envoyer</button>
+                aria-label="ajouter un commentaire"
+                placeholder="Ajouter un commentaire"
+                className="comment-form-input" />
+                <button className="comment-form-button">
+                    <FontAwesomeIcon 
+                        icon={faPaperPlane}
+                        className="comment-form-send"
+                    />
+                </button>
             </form>
-        </div>
+        </>
     )
 }

@@ -1,64 +1,84 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Comment from '../Comment/Comment';
+import Comment from '../CardComment/CardComment';
 import CommentForm from '../CommentForm/CommentForm'
-import { likeArticle, unlikeArticle } from '../../redux/articles/articleReducer';
+import { likeArticle } from '../../redux/articles/articleReducer';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './CardArticle.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisH, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function CardArticle(props) {
-
+    const articles = props.articleData;
+    const [showMore, setShowMore] = useState(false);
     const dispatch = useDispatch();
 
-    const handleLike = (articleId, index) => {
-        dispatch(likeArticle(articleId, index))
-    }
-
-    const handleUnlike = (articleId, index) => {
-        dispatch(unlikeArticle(articleId, index))
+    const handleLike = (articleId, index, likeValue) => {
+        console.log(likeValue);
+        dispatch(likeArticle(articleId, index, likeValue))
     }
 
     return (
-        <div
+        <article
             className="article-card">
+            <div className="card-header">
+
             <h2>
                 <Link to={{
-                    pathname: `/profile/${props.articleData.prenom}-${props.articleData.nom}`,
+                    pathname: `/profile/${articles.prenom}-${articles.nom}`,
                     state: {
-                        userId: props.articleData.user_id
+                        userId: articles.user_id
                     }
                 }}>
                     <img
                         className="avatar"
-                        src={props.articleData.avatar}
-                        alt={props.articleData.nom}
+                        src={articles.avatar}
+                        alt={articles.nom}
                     />
                 </Link>
-                {props.articleData.nom} {props.articleData.prenom}
+                {articles.nom} {articles.prenom}
             </h2>
+            </div>
             <figure>
+                    <h3 className="article-card-title">{articles.texte_article}</h3>
                 <img
-                    className="postPicture"
-                    src={props.articleData.image_url}
-                    alt={props.articleData.texte_article}/>
-                <figcaption className="caption">
-                    <h3>{props.articleData.texte_article}</h3>
-                    like : {props.articleData.articleLikes}
-                    {props.articleData.liked ?
-                        <button onClick={() => handleUnlike(props.articleData.id, props.index)}>👍</button>
-                        :
-                        <button onClick={() => handleLike(props.articleData.id, props.index)}>J'aime</button>
-                    }
+                    className="article-card-picture"
+                    src={articles.image_url}
+                    alt={articles.texte_article}/>
+                <figcaption className="article-card-footer">
+                    <span className="like-container">
+                        <button
+                            className="like-button"
+                            onClick={() => handleLike(articles.id, props.index, articles.liked)}
+                        >
+                            <FontAwesomeIcon
+                                icon={faHeart}
+                                className={articles.liked ?
+                                    "like-icon liked"
+                                :
+                                    "like-icon unliked"
+                                }
+                            />
+                            {articles.articleLikes}
+                        </button>
+                    </span>
+                    <button onClick={() => setShowMore(!showMore)}>{articles.comments.length} Commentaires</button>
                 </figcaption>
             </figure>
-            {props.articleData.updateArticle && <span>Modifier</span> }
-            {props.articleData.comments.map((item, index) => (
-                <Comment commentData={item} index={index} articleId={props.index} key={uuidv4()} />
-            ))}
-            <CommentForm articleId={props.articleData.id}/>
-        </div>
+            {articles.updateArticle && 
+                <button className="option-article">
+                    <FontAwesomeIcon icon={faEllipsisH}/>
+                </button>
+            }
+            {showMore &&
+                articles.comments.map((item, index) => (
+                    <Comment commentData={item} index={index} articleId={props.index} key={uuidv4()} />
+                ))
+            }
+            <CommentForm articleId={articles.id}/>
+        </article>
     )
 }
 

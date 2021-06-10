@@ -49,6 +49,7 @@ export default function Header() {
             setSearchResult([])
         :
             setSearchResult(result)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm])
 
 
