@@ -8,13 +8,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 5px 5px 5px rgba(94, 104, 121, 0.288);
 }
 
 .nav-logo {
     width: 25%;
     &-small {
-        width: 100%;
-    background: linear-gradient(45deg, #091f43, #d1515a);
+        width: 80%;
+        margin: 2% 5%;
+        &-container {
+            width: 100%;
+            background: linear-gradient(45deg, #091f43, #d1515a);
+            box-shadow: 5px 5px 5px rgba(94, 104, 121, 0.288);
+        }
 
     }
 }
@@ -98,6 +104,8 @@
 
 .nav-small {
     position: fixed;
+    height: 50px;
+    z-index: 1;
     bottom: 0;
     width: 100%;
     background: linear-gradient(45deg, #091f43, #d1515a);

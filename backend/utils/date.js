@@ -1,5 +1,4 @@
-export default function dateJsToSql() {// Convert Date to DATETIME SQL
-    const date = new Date()
+export default function dateJsToSql(date) {// Convert Date to DATETIME SQL
     return date.getUTCFullYear() + '-' +
     ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
     ('00' + date.getDate()).slice(-2) + ' ' +

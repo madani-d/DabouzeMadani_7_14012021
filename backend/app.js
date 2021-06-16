@@ -16,8 +16,8 @@ app.use(json());
 
 app.use('/images', express.static('images'));
 app.use('/api/auth', userRoutes);
-app.use('/api', articleRoutes);
-app.use('/api', commentRoutes);
+app.use('/api/article', articleRoutes);
+app.use('/api/comment', commentRoutes);
 app.use('/api', likeRoutes);
 
 export default app;

@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
-export const RestoreConnection = (token) => {
+export const RestoreConnection = () => {
     const dispatch = useDispatch()
     axios(`${process.env.REACT_APP_API_URL}/api/auth/restoreConnection`,
     { headers : {
-        "authorization": "Bearer " + token,
+        "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
         }}
     )
     .then(result => {
@@ -14,5 +14,12 @@ export const RestoreConnection = (token) => {
             type: 'CONNECT'
             })
     })
-    .catch(err => false)
+    .catch(err => {
+        console.log(err.response.data.error.message);
+        if (err) {
+            dispatch({
+                type: 'DISCONNECT'
+            })
+        }
+    })
 }

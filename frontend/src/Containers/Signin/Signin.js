@@ -1,6 +1,6 @@
 import { faAt, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import axios from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../../assets/without-icon.svg';
@@ -37,21 +37,21 @@ function Signin({  setUserId, setToken, setIsLogin }) {
         console.log(e.target);
     
         console.log(password);
-        // axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signin`,
-        //     { nom, prenom, email, password })// Post with each form element value
+        axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signin`,
+            { nom, prenom, email, password })// Post with each form element value
 
-        //     .then(res => {                   // After succes Post clear all form element state 
-        //         setNom("");
-        //         setPrenom("");
-        //         setEmail("");
-        //         setPassword("");
-        //         const storageToken = {
-        //             "userId": res.data.userId,
-        //             "token": res.data.token
-        //         }
-        //         localStorage.setItem("storageToken", JSON.stringify(storageToken));
-        //         history.push('/home');
-        //     })
+            .then(res => {                   // After succes Post clear all form element state 
+                setNom("");
+                setPrenom("");
+                setEmail("");
+                setPassword("");
+                const storageToken = {
+                    "userId": res.data.userId,
+                    "token": res.data.token
+                }
+                localStorage.setItem("storageToken", JSON.stringify(storageToken));
+                history.push('/home');
+            })
     };
 
 

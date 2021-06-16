@@ -15,7 +15,7 @@ export default function App() {
 
 
   if (!connected && localStorage.storageToken) {
-    RestoreConnection(JSON.parse(localStorage.storageToken).token)
+    RestoreConnection()
   }
 
   return (

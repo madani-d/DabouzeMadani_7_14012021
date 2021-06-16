@@ -1,22 +1,28 @@
 import { db } from '../connectionDB.js';
 import dateJsToSql from '../utils/date.js';
+import * as fs  from 'fs';
 import {
     sqlCreateArticle,
     sqlGetAllArticle,
     sqlGetComment,
     sqlGetLikedArticle,
-    sqlGetLikedComment
+    sqlGetLikedComment,
+    sqlDeleteArticle,
+    sqlGetDeleteFilename,
+    sqlUpdateArticle,
+    sqlReportArticle
 } from '../utils/scriptSQL.js';
 
 // Create Article
 
 export const createArticle = (req, res, next) => {
     console.log(req.body);
+    const date = new Date()
     let article = [
-        req.body.userId,
+        res.locals.userId,
         `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         req.body.article,
-        dateJsToSql(),
+        dateJsToSql(date),
     ]
 
     console.log(article);
@@ -104,6 +110,7 @@ export const getAllArticle = (req, res, next) => {
         // get all article
         const article = await getArticles();
         for (let i = 0; i < article.length; i++) {
+            article[i].date_post = dateJsToSql(article[i].date_post)
             // Get all comment for each article
             const comments = await getComments(article[i].id)
             for (let k = 0; k < comments.length; k++) {
@@ -128,4 +135,40 @@ export const getAllArticle = (req, res, next) => {
         res.status(200).json({ article })
     }
     sendData();
+}
+
+export const deleteArticle = (req, res, next) => {
+    console.log(req.body);
+    const data = [req.body.articleId, res.locals.userId]
+    db.query(sqlGetDeleteFilename, data, (err, result) => {
+        if (err) throw err;
+        const filename = result[0].image_url.split('images/')[1]
+        fs.unlink(`images/${filename}`, 
+            (error => {
+                if (error) console.log(error);
+            })
+        );
+    })
+
+    db.query(sqlDeleteArticle, data, (err, result) => {
+        if (err) throw err;
+        res.status(201).json({ message: "article supprimé" })
+    })
+};
+
+export const updateArticle = (req, res, next) => {
+    const data = [req.body.article, req.body.articleId, res.locals.userId]
+    db.query(sqlUpdateArticle, data, (err, result) => {
+        if (err) throw err;
+        res.status(201).json({ message: "article modifié" })
+    })
+}
+
+export const reportArticle = (req, res, next) => {
+    console.log(req.body);
+    const data = [res.locals.userId, req.body.articleId]
+    db.query(sqlReportArticle, data, (err, result) => {
+        if (err) throw err;
+        res.status(200).json({ message: "article signalé" })
+    })
 }

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import logo from '../../assets/without-icon.svg';
 import icon from '../../assets/icon.svg';
 import './Login.scss';
@@ -10,23 +11,22 @@ import { faAt, faLock } from '@fortawesome/free-solid-svg-icons';
 require('dotenv').config();
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const { register, handleSubmit, formState, setError } = useForm();
+    const { isDirty, isValid, errors } = formState;
+
     const dispatch = useDispatch();
 
     const history = useHistory();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const onSubmit = async data => {
+        console.log(data.email);
 
         axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`,
-            { email, password })       // Post with each form element value
+            { email: data.email,password: data.password })
 
             .then(res => {        
-                console.log(res);     // After succes Post clear all form element state 
-                setEmail("");
-                setPassword("");
-                const storageToken = { // And add userId and token to localstorage
+                console.log(res);
+                const storageToken = {
                     "userId": res.data.userId,
                     "token": res.data.token
                 }
@@ -34,20 +34,30 @@ function Login() {
                 dispatch({
                     type: 'CONNECT'
                 })
-                history.push('/home');
+                console.log(formState);
+
+                // history.push('/home');
             })
+            .catch(err => {
+                setError("connect", {
+                    message: "Email ou mot de passe incorrect"
+                })
+                alert("mot de passe incorect")
+                console.log(formState);
+            })
+            // console.log(errors.connect.message);
     };
 
 
     return (
-        <div className="connection-container">
+        <div className="connection-container light-container">
             <div className="icon-container">
-                <img src={icon} alt='logo groupomania' className="icon"/>
+                <img src={icon} alt='logo groupomania' className="icon light-icon"/>
             </div>
             <img src={logo} alt='logo groupomania' className="login-logo"/>
-                <form className="login_form" onSubmit={handleSubmit}>
-                <div className="input-container">
-                    <span className="input-icon">
+                <form className="login_form" onSubmit={handleSubmit(onSubmit)}>
+                <div className="input-container light-input">
+                    <span className="input-icon light-input-icon">
                         
                         <FontAwesomeIcon icon={faAt}/>
                     </span>
@@ -56,26 +66,29 @@ function Login() {
                         id="email1"
                         aria-label="email"
                         placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)} />
+                        {...register('email', {required: true})}/>
                 </div>
 
-                <div className="input-container">
-                    <span className="input-icon">
+                <div className="input-container light-input">
+                    <span className="input-icon light-input-icon">
                         <FontAwesomeIcon icon={faLock}/>
                     </span>
                     <input
-                        type="text"
+                        type="password"
                         id="password1"
                         aria-label="mot de passe"
                         placeholder="Mot de passe"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)} />
+                        {...register('password', {required:true})}/>
                 </div>
-                    <button>Connexion</button>
+                    <button className="light-button">Connexion</button>
                 </form>
                 <p>Ou</p>
-            <button onClick={() => history.push('/signin')}>Créer un compte</button>
+            <button
+                disabled={!isDirty || !isValid}
+                className="light-button"
+                onClick={() => history.push('/signin')}>
+                Créer un compte
+            </button>
         </div>
     )
 };

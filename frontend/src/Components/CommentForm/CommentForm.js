@@ -51,7 +51,6 @@ export default function CommentForm(props) {
                 <button className="comment-form-button">
                     <FontAwesomeIcon 
                         icon={faPaperPlane}
-                        className="comment-form-send"
                     />
                 </button>
             </form>

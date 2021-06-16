@@ -6,7 +6,7 @@ import { getArticles } from '../../redux/articles/articleReducer';
 import { getUsers } from '../../redux/usersReducer/usersReduser';
 import ArticleForm from '../../Components/ArticleForm/ArticleForm';
 import CardArticle from '../../Components/CardArticle/CardArticle';
-import Header from '../../Components/Navbar/Header';
+import Header from '../../Components/Header/Header';
 import {v4 as uuidv4} from 'uuid';
 import './Home.scss';
 
@@ -20,16 +20,23 @@ export default function Home() {
     const { users } = useSelector(state => ({
         ...state.usersReducer
     }))
-    console.log(articles);
 
+    const { connected } = useSelector(state => ({
+        ...state.connectedReducer
+    }))
+    console.log(connected);
+    console.log(articles);
     const dispatch = useDispatch();
     const history = useHistory();
+    !connected && history.push('/');
 
 
     useEffect(() => {
         dispatch(getArticles());
         dispatch(getUsers());
     }, [dispatch])
+
+
     
     console.log(users);
     const handleDeconnection = () => {
@@ -39,6 +46,8 @@ export default function Home() {
         })
         history.push('/');
     }
+
+    // const mostLiked = articles.sort((a, b) => b.articleLikes - a.articleLikes).slice(0, 5);
 
     return (
         <>

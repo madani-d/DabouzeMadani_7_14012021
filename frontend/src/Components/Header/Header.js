@@ -6,13 +6,15 @@ import ModalSearch from '../ModalSearch/ModalSearch';
 import Logo from '../../assets/icon-left-font-monochrome-black.svg';
 import WhiteLogo from '../../assets/icon-left-font-monochrome-white.svg';
 import search from '../../assets/search-solid.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faSignOutAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
     const { users } = useSelector(state => ({
         ...state.usersReducer
     }))
-    const usersName = [...users];
-    for (const userName of usersName) {
+    const usersNames = [...users];
+    for (const userName of usersNames) {
         userName.completName = userName.prenom + " " + userName.nom
     }
 
@@ -41,8 +43,8 @@ export default function Header() {
 
 
     useEffect(() => {
-        console.log(usersName);
-        const result = usersName.filter(user =>
+        console.log(usersNames);
+        const result = usersNames.filter(user =>
             user.completName.includes(searchTerm)
         );
         searchTerm === "" ?
@@ -60,8 +62,21 @@ export default function Header() {
             <nav className="nav">
                 <img src={Logo} alt="logo Groupomania" className="nav-logo"/>
                 <ul className="liste">
-                    <li className="items">Fil d'actualité</li>
-                    <li className="items">Mon profil</li>
+                    <li className="items">
+                        <FontAwesomeIcon
+                            icon={faHome}
+                        />
+                    </li>
+                    <li className="items">
+                        <FontAwesomeIcon
+                            icon={faUsers}
+                        />
+                    </li>
+                    <li className="items">
+                        <FontAwesomeIcon
+                            icon={faSignOutAlt}
+                        />
+                    </li>
                 </ul>
                 <div className="search-container">
                     <input
@@ -91,14 +106,20 @@ export default function Header() {
             </nav>
         :
             <>
-                <div>
+                <div className="nav-logo-small-container">
                     <img src={WhiteLogo} alt="logo Groupomania" className="nav-logo-small"/>
                 </div>
                 <nav className="nav-small">
                     <ul className="liste liste-small">
                         <li className="items">Fil d'actualité</li>
                         <li className="items">Mon profil</li>
-                        <li><img src={search} alt="search button" onClick={handleToggleSearch} className="search-icon items" /></li>
+                        <li>
+                            <img 
+                                src={search} 
+                                alt="search button" 
+                                onClick={handleToggleSearch} 
+                                className="search-icon items"/>
+                        </li>
                     </ul>
                 </nav>
                 {modalSearch &&

@@ -24,11 +24,12 @@ export const signin = (req, res, next) => {
         }
         bcrypt.hash(req.body.password, 10)
         .then(hash => {
+            const date = new Date()
             user.push(// Add request data to array
                 req.body.nom,
                 req.body.prenom,
                 req.body.email,
-                dateJsToSql(),
+                dateJsToSql(date),
                 hash,)
 
             db.query(sqlSignin, user, (err, result) => {// Create User in DB

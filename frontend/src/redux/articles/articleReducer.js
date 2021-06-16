@@ -15,7 +15,7 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
         case 'LIKEARTICLE':
             console.log(state.articles);
             const likeArticles = [...state.articles];
-            const article = likeArticles[action.payload];
+            const article = likeArticles[action.index];
             article.liked = !article.liked;
             article.liked ? 
                 article.articleLikes++
@@ -29,7 +29,7 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
         case 'LIKECOMMENT':
             console.log('like');
             const likeComment = [...state.articles];
-            const comment = likeComment[action.articleId].comments[action.payload];
+            const comment = likeComment[action.articleId].comments[action.index];
             comment.liked = !comment.liked;
             comment.liked ?
                 comment.commentLikes++
@@ -38,6 +38,43 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
 
             return {
                 articles: likeComment
+            }
+
+        case 'UPDATEARTICLE':
+            const updateArticle = [...state.articles];
+            updateArticle[action.index].texte_article = action.articleTexte;
+
+            return {
+                articles: updateArticle
+            }
+
+        // case 'UPDATECOMMENT':
+        //     const
+
+        case 'DELETEARTICLE':
+            const deleteArticle = state.articles.filter(item => item.id !== action.articleId)
+
+            return {
+                articles: deleteArticle
+            }
+
+        case 'DELETECOMMENT':
+            const deleteComment = [...state.articles];
+            console.log(action.articleId);
+            for (const article of deleteComment) {
+                console.log("ca passe la?");
+                if (article.id === action.articleId) {
+                    console.log(article.id);
+                    article.comments = article.comments.filter(item => item.id !== action.commentId)
+                    console.log(article.comments);
+                    break
+                }
+            }
+            console.log("c'est ici !!!!!");
+            console.log(deleteComment);
+
+            return {
+                articles: deleteComment
             }
 
         default:
@@ -50,7 +87,7 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
 export default articleReducer;
 
 export const getArticles = () => dispatch => {
-    axios(`${process.env.REACT_APP_API_URL}/api/getall`,
+    axios(`${process.env.REACT_APP_API_URL}/api/article/getall`,
         { headers : {
         "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
         }}
@@ -68,7 +105,7 @@ export const getArticles = () => dispatch => {
 }
 
 export const postArticle = (data, fileType) => dispatch =>{
-    axios.post(`${process.env.REACT_APP_API_URL}/api/article`,
+    axios.post(`${process.env.REACT_APP_API_URL}/api/article/article`,
         data,
         { headers: {
             "Content-Type": `${fileType}`,
@@ -85,7 +122,7 @@ export const postArticle = (data, fileType) => dispatch =>{
 export const likeArticle = (articleId, index, likeValue) => dispatch => {
     console.log(articleId);
     if (likeValue) {
-        axios.post(`${process.env.REACT_APP_API_URL}/api/article/unlikeArticle`,
+        axios.post(`${process.env.REACT_APP_API_URL}/api/unlikeArticle`,
             {articleId},
             { headers: {
                 "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
@@ -95,11 +132,11 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
             console.log(res);
             dispatch({
                 type: 'LIKEARTICLE',
-                payload: index
+                index: index
                 })
             })
     } else {
-        axios.post(`${process.env.REACT_APP_API_URL}/api/article/likeArticle`,
+        axios.post(`${process.env.REACT_APP_API_URL}/api/likeArticle`,
             {articleId},
             { headers: {
                     "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
@@ -109,7 +146,7 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
             console.log(res);
             dispatch({
                 type: 'LIKEARTICLE',
-                payload: index
+                index: index
                 })
             })
     }
@@ -117,7 +154,7 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
 
 export const likeComment = (commentId, index, articleId, likeValue) => dispatch => {
     if (likeValue) {
-        axios.post(`${process.env.REACT_APP_API_URL}/api/article/likeComment`,
+        axios.post(`${process.env.REACT_APP_API_URL}/api/likeComment`,
             {commentId},
             { headers: {
                     "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
@@ -127,12 +164,12 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
             console.log(res);
             dispatch({
                 type: 'LIKECOMMENT',
-                payload: index,
+                index: index,
                 articleId: articleId
             });
         })
     } else {
-        axios.post(`${process.env.REACT_APP_API_URL}/api/article/unlikeComment`,
+        axios.post(`${process.env.REACT_APP_API_URL}/api/unlikeComment`,
             {commentId},
             { headers: {
                 "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
@@ -142,12 +179,80 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
             console.log(res);
             dispatch({
                 type: 'LIKECOMMENT',
-                payload: index,
+                index: index,
                 articleId: articleId
             });
         })
     }
 };
+
+export const deleteArticle = articleId  => dispatch => {
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/article/delete`,{
+        headers: {
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+        },
+        data: { articleId }
+    })
+    .then(res => {
+        console.log(res);
+        dispatch({
+            type: 'DELETEARTICLE',
+            articleId: articleId
+        })
+    })
+    .catch(error => console.log(error))
+}
+
+export const deleteComment = (commentId, articleId) => dispatch => {
+    // axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/delete`,{
+    //     headers: {
+    //         "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+    //     },
+    //     data: { commentId }
+    // })
+    // .then(res => {
+    //     console.log(res);
+    //     dispatch({
+    //         type: 'DELETECOMMENT',
+    //         commentId: commentId,
+    //         articleId: articleId,
+    //         index: index
+    //     })
+    // })
+    dispatch({
+        type: 'DELETECOMMENT',
+        commentId: commentId,
+        articleId: articleId
+    })
+}
+
+export const updateArticle = (article, articleId, index) => dispatch => {
+    const data = { article: article, articleId: articleId }
+    console.log(data);
+    axios.put(`${process.env.REACT_APP_API_URL}/api/article/update`, 
+        data,
+        { headers: {
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+        }}
+    )
+    .then(res => {
+        dispatch({
+            type: 'UPDATEARTICLE',
+            index: index,
+            articleTexte: article
+        })
+    })
+}
+
+export const reportArticle = articleId => dispatch => {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/article/report`,
+        {articleId},
+        {headers: {
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+        }}
+    )
+    .then(res => console.log(res))
+}
 
 
 

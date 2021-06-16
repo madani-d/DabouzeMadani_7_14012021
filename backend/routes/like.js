@@ -8,10 +8,10 @@ import {
     removeLikeComment
 } from '../controllers/like.js';
 
-router.post('/article/likeArticle', auth, createLikeArticle);
-router.post('/article/unlikeArticle', auth, removeLikeArticle);
-router.post('/article/likeComment', auth, createLikeComment);
-router.post('/article/unlikeComment', auth, removeLikeComment);
+router.post('/likeArticle', auth, createLikeArticle);
+router.post('/unlikeArticle', auth, removeLikeArticle);
+router.post('/likeComment', auth, createLikeComment);
+router.post('/unlikeComment', auth, removeLikeComment);
 
 
 
