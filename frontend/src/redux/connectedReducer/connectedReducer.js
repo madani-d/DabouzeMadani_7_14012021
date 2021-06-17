@@ -1,5 +1,5 @@
 const INITIALE_CONNECTED_STATE = {
-    connected: false
+    connected: false,
 }
 
 function connectedReducer(state = INITIALE_CONNECTED_STATE, action) {
@@ -16,6 +16,7 @@ function connectedReducer(state = INITIALE_CONNECTED_STATE, action) {
                 connected: false
             }
         }
+
         default:
             return state
     }

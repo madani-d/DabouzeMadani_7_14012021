@@ -34,7 +34,6 @@ export const signin = (req, res, next) => {
 
             db.query(sqlSignin, user, (err, result) => {// Create User in DB
                 if (err) throw err;
-                console.log(process.env.SECRET_TOKEN_KEY);
                 res.status(200).json({// Create and send token
                     userId: result.insertId,
                     token: jwt.sign(
@@ -70,7 +69,7 @@ export const login = (req, res, next) => {
                 bcrypt.compare(req.body.password, result[0].mdp)// Compare Emails
                     .then(valid => {
                         if (!valid) {
-                            return res.status(401).json({ error: 'Mot de passe incorrect.' })
+                            return res.status(401).json({ message: 'Mot de passe incorrect.' })
                         }
                         res.status(200).json({// Create and send Token
                             userId: result[0].id,

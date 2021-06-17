@@ -11,16 +11,14 @@ import { faAt, faLock } from '@fortawesome/free-solid-svg-icons';
 require('dotenv').config();
 
 function Login() {
-    const { register, handleSubmit, formState, setError } = useForm();
-    const { isDirty, isValid, errors } = formState;
+    const { register, handleSubmit, } = useForm();
+    const [errorMessage, setErrorMessage] = useState("")
 
     const dispatch = useDispatch();
 
     const history = useHistory();
 
-    const onSubmit = async data => {
-        console.log(data.email);
-
+    const onSubmit = data => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`,
             { email: data.email,password: data.password })
 
@@ -33,21 +31,14 @@ function Login() {
                 localStorage.setItem("storageToken", JSON.stringify(storageToken));
                 dispatch({
                     type: 'CONNECT'
-                })
-                console.log(formState);
-
-                // history.push('/home');
+                })                
+                history.push('/home');
             })
             .catch(err => {
-                setError("connect", {
-                    message: "Email ou mot de passe incorrect"
-                })
-                alert("mot de passe incorect")
-                console.log(formState);
+                console.log(err.response.data.message);
+                setErrorMessage(err.response.data.message);
             })
-            // console.log(errors.connect.message);
     };
-
 
     return (
         <div className="connection-container light-container">
@@ -79,12 +70,15 @@ function Login() {
                         aria-label="mot de passe"
                         placeholder="Mot de passe"
                         {...register('password', {required:true})}/>
+                    <span className="error-message">{errorMessage && errorMessage}</span>
                 </div>
-                    <button className="light-button">Connexion</button>
+                    <button 
+                        className="light-button">
+                        Connexion
+                    </button>
                 </form>
                 <p>Ou</p>
             <button
-                disabled={!isDirty || !isValid}
                 className="light-button"
                 onClick={() => history.push('/signin')}>
                 Créer un compte

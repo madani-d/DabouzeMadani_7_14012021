@@ -96,9 +96,16 @@
     border-radius: 25px;
     // box-shadow: 2px 2px 5px #babecc,
     //             -5px -5px 10px #ffffff73;
+    &:disabled {
+        color: #817e7e
+    }
     &:focus {
         color: #3498db;
         // box-shadow: 2px 2px 5px #ffffff73,
         //             -5px -5px 10px #babecc;
     }
+}
+
+.error-message {
+    color: #ff0000;
 }
