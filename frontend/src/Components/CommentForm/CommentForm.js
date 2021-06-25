@@ -1,53 +1,44 @@
 import React from 'react';
 import { useState } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { getArticles } from '../../redux/articles/articleReducer';
 import './CommentForm.scss';
+import { postComment } from '../../redux/articles/articleReducer';
+import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
-export default function CommentForm(props) {
-
+export default function CommentForm({ articleId }) {
+    const { register, handleSubmit, formState } = useForm();
     const [comm, setComm] = useState("");
     const dispatch = useDispatch();
 
 
-    const handleSubmit = e => {
-        e.preventDefault();
-
-        const formData = new FormData();
-        formData.append("userId", JSON.parse(localStorage.storageToken).userId);
-        formData.append("articleId", props.articleId);
-        formData.append("comment", comm);
-
-        axios.post(`${process.env.REACT_APP_API_URL}/api/comment`,
-            formData,
-            { headers: {
-                "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-            }}
-            )
-            .then(res => {
-                console.log(res);
-                setComm("");
-                dispatch(getArticles());
-            })
-
+    const onSubmit = (data) => {
+        console.log(data.comment);
+        console.log(articleId);
+        dispatch(postComment(articleId, data.comment))
+        // const formData = new FormData();
+        // formData.append("userId", JSON.parse(localStorage.storageToken).userId);
+        // formData.append("articleId", props.articleId);
+        // formData.append("comment", comm);
+        // console.log(comm);
+        // setComm("");
     }
 
     return (
         <>
             <form 
-                onSubmit={(e) => handleSubmit(e)}
+                onSubmit={handleSubmit(onSubmit)}
                 className="comment-form"
             >
                 <input
-                value={comm}
-                onChange={(e) => setComm(e.target.value)}
-                type="text"
-                aria-label="ajouter un commentaire"
-                placeholder="Ajouter un commentaire"
-                className="comment-form-input" />
+                    {...register('comment', {required: true})}
+                    value={comm}
+                    onChange={(e) => setComm(e.target.value)}
+                    type="text"
+                    aria-label="ajouter un commentaire"
+                    placeholder="Ajouter un commentaire"
+                    className="comment-form-input" />
                 <button className="comment-form-button">
                     <FontAwesomeIcon 
                         icon={faPaperPlane}

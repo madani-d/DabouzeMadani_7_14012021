@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Comment from '../CardComment/CardComment';
 import CommentForm from '../CommentForm/CommentForm';
@@ -15,7 +15,7 @@ import './CardArticle.scss';
 
 export default function CardArticle(props) {
     const articles = props.articleData;
-    const [showMore, setShowMore] = useState(false);
+    const [showMore, setShowMore] = useState();
     const [option, setOption] = useState(false);
     const [modify, setModify] = useState(false);
     const dispatch = useDispatch();
@@ -34,6 +34,9 @@ export default function CardArticle(props) {
         setOption(false);
         dispatch(deleteArticle(articleId))
     }
+    // useEffect(() => {
+    //     setShowMore(false);
+    // }, [showMore])
 
     return (
         <article className="article-card light-container">
@@ -74,9 +77,10 @@ export default function CardArticle(props) {
                 <ArticleUpdateForm
                     imageUrl={articles.image_url}
                     texteArticle={articles.texte_article}
-                    // setOption={setOption}
-                    // articleId={articles.id}
-                    // index={props.index}
+                    setModify={setModify}
+                    modify={modify}
+                    articleId={articles.id}
+                    index={props.index}
                     />
             :
                 <figure>

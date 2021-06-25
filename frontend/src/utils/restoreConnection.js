@@ -14,12 +14,12 @@ export const RestoreConnection = () => {
             type: 'CONNECT'
             })
     })
-    .catch(err => {
-        console.log(err.response.data.error.message);
-        if (err) {
-            dispatch({
-                type: 'DISCONNECT'
-            })
-        }
-    })
+    // .catch(err => {
+    //     console.log(err.response.data.error.message);
+    //     if (err) {
+    //         dispatch({
+    //             type: 'DISCONNECT'
+    //         })
+    //     }
+    // })
 }

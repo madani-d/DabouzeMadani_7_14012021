@@ -9,7 +9,7 @@ import {
     reportComment
 } from '../controllers/comment.js';
 
-router.post('/comment', auth, multer, createComment);
+router.post('/', auth, multer, createComment);
 router.delete('/delete', auth, deleteComment);
 router.put('/update', auth, updateComment);
 router.post('/report', auth, reportComment);

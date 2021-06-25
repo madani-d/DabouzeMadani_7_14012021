@@ -1,89 +1,64 @@
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
-import { postArticle, updateArticle } from '../../redux/articles/articleReducer';
+import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './ArticleForm.scss'
 import { faImages, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { postArticle } from '../../redux/articles/articleReducer';
+import './ArticleForm.scss';
 
 
-function Formulaire({ imageUrl, texteArticle, articleId, index, setOption }) {
-    const [article, setArticle] = useState(texteArticle ? texteArticle : "");
-    const [selectedFile, setSelectedFile] = useState();
+function Formulaire() {
+    const { register, handleSubmit } = useForm();
     const [preview, setPreview] = useState();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    setOption && setOption(false)
-
-    const handleSubmit = event => {
-        event.preventDefault();
-
+    const onSubmit = (data, e) => {
+        console.log(data.file[0])
         const formData = new FormData();
-        formData.append("article", article);
-        !texteArticle && formData.append("file", selectedFile);
-
-        if (texteArticle) { 
-            dispatch(updateArticle(article, articleId, index));
-        } else {
-            dispatch(postArticle(formData, selectedFile.type));
-        }
-
-        setArticle("");
-        setSelectedFile();
+        formData.append("article", data.article);
+        formData.append("file", data.file[0]);
+        console.log(formData);
+        console.log(data.file[0].type);
+        dispatch(postArticle(formData, data.file[0].type));
+        e.target.reset();
         setPreview();
     }
 
     const handleFile = e => {
         console.log(e);
-        e.preventDefault();
         setPreview(URL.createObjectURL(e.target.files[0]))
-
-        console.log(e.target.files);
-        setSelectedFile(e.target.files[0]);
     }
 
     return (
-        <form className="form-article" onSubmit={handleSubmit}>
-            {/* <textarea 
-                cols="1"
-                rows="1"
-                aria-label="ajouter un article"
-                placeholder="Quoi de neuf ?"
-                className="form-article-input"
-                ></textarea> */}
+        <form
+            className="form-article"
+            onSubmit={handleSubmit(onSubmit)}>
             <input
                 type="text"
                 aria-label="ajouter un article"
                 placeholder="Quoi de neuf ?"
                 className="form-article-input"
-                value={article}
-                onChange={(e) => setArticle(e.target.value)} />
-            {texteArticle ? 
-                <img src={imageUrl} alt="preview" className="preview"/>
-            :
-                <> 
-                <label 
-                    htmlFor="image"
-                    className="form-article-button form-article-file">
-                    <FontAwesomeIcon
-                        icon={faImages}
-                    />
-                </label>
-                <input
-                    type="file"
-                    id="image"
-                    name="file"
-                    accept="image/*"
-                    onChange={(e) => handleFile(e)}
-                    />
-                <img src={preview} alt="preview"  className="preview"/>
-                </>
-            }
+                {...register('article', {required: true})} />
+            <label 
+                htmlFor="image"
+                className="form-article-button form-article-file">
+                <FontAwesomeIcon
+                    icon={faImages}/>
+            </label>
+            <input
+                type="file"
+                id="image"
+                className="image"
+                name="file"
+                accept="image/*"
+                {...register('file', {required: true})}
+                onChange={(e) => handleFile(e)}/>
+            {preview && <img src={preview} alt="preview"  className="preview"/>}
             <button 
                 className="form-article-button form-article-send">
                     <FontAwesomeIcon
                         icon={faPaperPlane}
-                        className="article-form-send"
-                    />
+                        className="article-form-send"/>
             </button>
         </form>
     )

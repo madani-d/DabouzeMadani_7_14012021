@@ -12,6 +12,23 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
                 articles: action.payload
             }
 
+        case 'POSTARTICLE':
+            const postArticle = [...state.articles];
+            postArticle.unshift(action.payload);
+
+            return {
+                articles: postArticle
+            }
+
+        case 'POSTCOMMENT':
+            const postComment = [...state.articles];
+            const index = postComment.findIndex(element => element.id === action.articleId);
+            postComment[index].comments.push(action.payload)
+
+            return {
+                articles: postComment
+            }
+
         case 'LIKEARTICLE':
             console.log(state.articles);
             const likeArticles = [...state.articles];
@@ -29,23 +46,32 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
         case 'LIKECOMMENT':
             console.log('like');
             const likeComment = [...state.articles];
-            const comment = likeComment[action.articleId].comments[action.index];
-            comment.liked = !comment.liked;
-            comment.liked ?
-                comment.commentLikes++
+            const articleIndex = likeComment.findIndex(element => element.id === action.articleId);
+            likeComment[articleIndex].comments[action.index].liked = !likeComment[articleIndex].comments[action.index].liked;
+            likeComment[articleIndex].comments[action.index].liked ?
+                likeComment[articleIndex].comments[action.index].commentLikes++
             :
-                comment.commentLikes--;
+                likeComment[articleIndex].comments[action.index].commentLikes--;
 
             return {
                 articles: likeComment
             }
 
         case 'UPDATEARTICLE':
-            const updateArticle = [...state.articles];
-            updateArticle[action.index].texte_article = action.articleTexte;
-
+            const updateArticles = [...state.articles];
+            const updateIndex = updateArticles.findIndex(element => element.id === action.articleId);
+            updateArticles[updateIndex].image_url = action.payload.image_url;
+            updateArticles[updateIndex].texte_article = action.payload.article;
             return {
-                articles: updateArticle
+                articles: updateArticles
+            }
+
+        case 'UPDATEARTICLETEXT':
+            const updateArticlesText = [...state.articles];
+            const updateTextIndex = updateArticlesText.findIndex(element => element.id === action.articleId);
+            updateArticlesText[updateTextIndex].texte_article = action.payload;
+            return {
+                articles: updateArticlesText
             }
 
         // case 'UPDATECOMMENT':
@@ -94,10 +120,10 @@ export const getArticles = () => dispatch => {
     )
     .then(res => {
         console.log(res);
-        console.log(res.data.article);
+        console.log(res.data);
         dispatch({
             type: 'LOADARTICLES',
-            payload: res.data.article
+            payload: res.data
         })
     })
 
@@ -113,9 +139,29 @@ export const postArticle = (data, fileType) => dispatch =>{
     }})
 
         .then(res => {
-            console.log(res);
-            dispatch(getArticles())
+            dispatch({
+                type: 'POSTARTICLE',
+                payload: res.data
+            })
         })
+}
+
+export const postComment = (articleId, comment) => dispatch => {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/comment`,
+    {articleId, comment},
+    { headers: {
+        "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+    }}
+    )
+    .then(res => {
+        console.log(res);
+        console.log(res.data);
+        dispatch({
+            type: 'POSTCOMMENT',
+            payload: res.data,
+            articleId: articleId
+        })
+    })
 }
 
 
@@ -153,6 +199,7 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
 };
 
 export const likeComment = (commentId, index, articleId, likeValue) => dispatch => {
+    console.log(articleId);
     if (likeValue) {
         axios.post(`${process.env.REACT_APP_API_URL}/api/likeComment`,
             {commentId},
@@ -204,45 +251,62 @@ export const deleteArticle = articleId  => dispatch => {
 }
 
 export const deleteComment = (commentId, articleId) => dispatch => {
-    // axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/delete`,{
-    //     headers: {
-    //         "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-    //     },
-    //     data: { commentId }
-    // })
-    // .then(res => {
-    //     console.log(res);
-    //     dispatch({
-    //         type: 'DELETECOMMENT',
-    //         commentId: commentId,
-    //         articleId: articleId,
-    //         index: index
-    //     })
-    // })
-    dispatch({
-        type: 'DELETECOMMENT',
-        commentId: commentId,
-        articleId: articleId
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/delete`,{
+        headers: {
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+        },
+        data: { commentId }
+    })
+    .then(res => {
+        console.log(res);
+        dispatch({
+            type: 'DELETECOMMENT',
+            commentId: commentId,
+            articleId: articleId
+        })
     })
 }
 
-export const updateArticle = (article, articleId, index) => dispatch => {
-    const data = { article: article, articleId: articleId }
-    console.log(data);
-    axios.put(`${process.env.REACT_APP_API_URL}/api/article/update`, 
+export const updateArticle = (data, articleId, fileType) => dispatch => {
+    if (fileType) {
+        axios.put(`${process.env.REACT_APP_API_URL}/api/article/updateArticle`, 
+        data,
+        { headers: {
+            "Content-Type": `${fileType}`,
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+        }}
+        )
+        .then(res => {
+            console.log(res.data);
+            dispatch({
+                type: 'UPDATEARTICLE',
+                payload: res.data,
+                articleId: articleId
+            })
+        })
+    } else {
+        axios.put(`${process.env.REACT_APP_API_URL}/api/article/updateText`, 
         data,
         { headers: {
             "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
         }}
-    )
-    .then(res => {
-        dispatch({
-            type: 'UPDATEARTICLE',
-            index: index,
-            articleTexte: article
+        )
+        .then(res => {
+            console.log(res.data);
+            dispatch({
+                type: 'UPDATEARTICLETEXT',
+                payload: res.data,
+                articleId: articleId
+            })
         })
-    })
+    }
 }
+
+export const updateArticleText = (articleText, articleId) => dispatch => {
+
+}
+
+
 
 export const reportArticle = articleId => dispatch => {
     axios.post(`${process.env.REACT_APP_API_URL}/api/article/report`,
@@ -253,8 +317,3 @@ export const reportArticle = articleId => dispatch => {
     )
     .then(res => console.log(res))
 }
-
-
-
-
-

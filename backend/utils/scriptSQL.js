@@ -16,9 +16,31 @@ export const sqllogin = `
 
 // Articles
 export const sqlCreateArticle = `
-    INSERT INTO Article  
-    (user_id, image_url, texte_article, date_post)  
-    VALUES (?, ?, ?, ?);`
+CALL create_article (?, ?, ?, ?);`
+
+export const sqlGetArticles = `
+    SELECT Article.id, Article.user_id, Article.image_url, 
+    Article.texte_article, Article.date_post,
+    (SELECT COUNT(*) FROM Likepost WHERE Article.id = Likepost.article_id) AS articleLikes,
+    (SELECT COUNT(*) FROM Likepost WHERE Article.id = Likepost.article_id AND Likepost.user_id = ?) AS liked,
+    User.avatar, User.nom, User.prenom, 
+    Commentaire.id as commentId, Commentaire.texte_commentaire, 
+    Commentaire.date_post as commentDatePost, Commentaire.user_id as commentaireUserId, 
+    (SELECT COUNT(*) FROM Likepost WHERE Commentaire.id = Likepost.commentaire_id) AS commentLikes,
+    (SELECT User.avatar FROM User 
+        WHERE Commentaire.user_id = User.id AND Article.id = Commentaire.article_id) AS commentAvatar,
+    (SELECT User.id FROM User 
+        WHERE Commentaire.user_id = User.id AND Article.id = Commentaire.article_id) AS commentUserId,
+    (SELECT User.nom FROM User 
+        WHERE Commentaire.user_id = User.id AND Article.id = Commentaire.article_id) AS commentUserNom,
+    (SELECT User.prenom FROM User 
+        WHERE Commentaire.user_id = User.id AND Article.id = Commentaire.article_id) AS commentUserPrenom,
+    (SELECT COUNT(*) FROM Likepost WHERE Commentaire.id = Likepost.commentaire_id AND Likepost.user_id = ?) AS commentLiked
+    FROM Article 
+    LEFT JOIN User ON Article.user_id = User.id 
+    LEFT JOIN Commentaire ON Article.id = Commentaire.article_id 
+    ORDER BY Article.id DESC;
+`
 
 export const sqlGetAllArticle = `
     SELECT Article.id, Article.user_id, Article.image_url,  
@@ -43,9 +65,16 @@ export const sqlDeleteArticle = `
 
 export const sqlUpdateArticle = `
     UPDATE Article  
-    SET texte_article = ?  
+    SET image_url = ?, texte_article = ? 
     WHERE id = ?  
     AND user_id = ?;`
+
+export const sqlUpdateArticleText = `
+        UPDATE Article
+        SET texte_article = ?
+        WHERE id = ?
+        AND user_id = ?;
+`
 
 export const sqlReportArticle = `
     INSERT INTO Report  
@@ -55,9 +84,7 @@ export const sqlReportArticle = `
 
 // Comments
 export const sqlCreateComment = `
-    INSERT INTO Commentaire  
-    (user_id, article_id, texte_commentaire, date_post)  
-    VALUES (?, ?, ?, ?);`
+    CALL create_commentaire (?, ?, ?, ?);`
 
 export const sqlGetComment = `
     SELECT User.avatar, User.nom, User.prenom,   

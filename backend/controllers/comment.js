@@ -12,18 +12,30 @@ import {
 export const createComment = (req, res, next) => {
     const date = new Date()
     let comment = [
-        req.body.userId,
+        res.locals.userId,
         req.body.articleId,
         // `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        req.body.comment,
         dateJsToSql(date),
+        req.body.comment,
     ]
 
-    console.log(comment);
     db.query(sqlCreateComment, comment, (err, result) => {
         if (err) throw err;
-        console.log(result);
-        res.status(200).json({ message: "Commentaire publié avec succés !" })
+        console.log(result[0][0].id);
+        const results = result[0][0];
+        const newComment = {
+            id: results.id,
+            avatar: results.avatar,
+            nom: results.nom,
+            prenom: results.prenom,
+            user_id: res.locals.userId,
+            date_post: dateJsToSql(results.date_post),
+            texte_commentaire: req.body.comment,
+            commentsLikes: 0,
+            liked: false,
+            updateComment: true
+        }
+        res.status(200).json(newComment)
     })
 };
 
