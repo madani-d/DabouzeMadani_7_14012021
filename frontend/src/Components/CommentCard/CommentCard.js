@@ -5,9 +5,9 @@ import { likeComment } from '../../redux/articles/articleReducer';
 import OptionsToggle from '../OptionsToggle/OptionsToggle';
 import React, { useState } from 'react';
 import { deleteComment } from '../../redux/articles/articleReducer';
-import './CardComment.scss';
+import './CommentCard.scss';
 
-export default function Comment(props) {
+export default function CommentCard(props) {
     const [option, setOption] = useState(false);
     const [modify, setModify] = useState(false);
 
@@ -38,7 +38,7 @@ export default function Comment(props) {
                         src={comment.avatar}
                         alt={comment.nom}
                     />
-                    {comment.nom} {comment.prenom}
+                    {comment.prenom} {comment.nom}
                 </h3>
                 <button
                     onClick={() => setOption(!option)}

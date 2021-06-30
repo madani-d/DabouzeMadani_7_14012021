@@ -1,9 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import CardArticle from '../../Components/CardArticle/CardArticle';
+import ArticleCard from '../../Components/ArticleCard/ArticleCard';
 import {v4 as uuidv4} from 'uuid';
 import Header from '../../Components/Header/Header';
+import ProfilCard from '../../Components/ProfilCard/ProfilCard';
 
 
 export default function Profile() {
@@ -25,6 +26,9 @@ export default function Profile() {
         ...state.usersReducer
     }))
 
+    const user = users.find(element => element.id === userId)
+    console.log(user);
+
     console.log(articles);
     console.log(location.pathname);
     console.log(userId);
@@ -32,14 +36,15 @@ export default function Profile() {
     return (
         <>
             <Header/>
-            <div className="profil-header light-container">
+            <div className="">
                 {/* <img src={} alt="" /> */}
             </div>
             <section className="thread">
+                <ProfilCard user={user}/>
                 {
                     articles.map(item => (
                         (userId === item.user_id) &&
-                        <CardArticle articleData={item} key={uuidv4()}/>
+                        <ArticleCard articleData={item} key={uuidv4()}/>
                     ))
                 }
             </section>

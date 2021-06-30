@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 export default function CommentForm({ articleId }) {
-    const { register, handleSubmit, formState } = useForm();
+    const { register, handleSubmit } = useForm();
     const [comm, setComm] = useState("");
     const dispatch = useDispatch();
 

@@ -302,12 +302,6 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
     }
 }
 
-export const updateArticleText = (articleText, articleId) => dispatch => {
-
-}
-
-
-
 export const reportArticle = articleId => dispatch => {
     axios.post(`${process.env.REACT_APP_API_URL}/api/article/report`,
         {articleId},
@@ -315,5 +309,17 @@ export const reportArticle = articleId => dispatch => {
             "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
         }}
     )
-    .then(res => console.log(res))
+    .then(res => {
+        res.data.message === "deja signalé" && alert("Vous avez déja signalé cette article.");
+    })
 }
+
+export const reportComment = commentId => dispatch => {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/commentaire/report`,
+        {commentId},
+        {headers: {
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+        }}
+    )
+    .then(res => console.log(res))
+} 

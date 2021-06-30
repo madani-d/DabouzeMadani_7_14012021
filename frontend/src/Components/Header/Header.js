@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import './Header.scss';
 import ModalSearch from '../ModalSearch/ModalSearch';
 import Logo from '../../assets/icon-left-font-monochrome-black.svg';
 import WhiteLogo from '../../assets/icon-left-font-monochrome-white.svg';
-import search from '../../assets/search-solid.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faSignOutAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faSearch, faSignOutAlt, faUsers, faUserShield } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
     const { users } = useSelector(state => ({
@@ -17,42 +17,63 @@ export default function Header() {
     for (const userName of usersNames) {
         userName.completName = userName.prenom + " " + userName.nom
     }
+    
+    const { connected } = useSelector(state => ({
+        ...state.connectedReducer
+    }))
 
+    const reportsCount = useSelector(state => (
+        state.reportReducer.reported.count
+    ))
+    console.log('header render');
+    const dispatch = useDispatch();
+    const history = useHistory();
+    !connected && history.push('/');
+    
     const [ windowWidth, setWindowWidth ] = useState(window.innerWidth);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [modalSearch, setModalSearch] = useState(false);
-
+    
     useEffect(() => {
         const changeWidth = () => {
             setWindowWidth(window.innerWidth);
         }
-
+        
         window.addEventListener('resize', changeWidth);
         console.log(windowWidth);
-
+        
         return () => {
             window.removeEventListener('resize', changeWidth);
         }
     }, [windowWidth])
-
+    
     const handleToggleSearch = () => {
         setModalSearch(!modalSearch);
         setSearchTerm("");
     }
-
-
+    
+    
     useEffect(() => {
+        window.scrollTo(0, 0);
         console.log(usersNames);
         const result = usersNames.filter(user =>
             user.completName.includes(searchTerm)
-        );
-        searchTerm === "" ?
+            );
+            searchTerm === "" ?
             setSearchResult([])
-        :
+            :
             setSearchResult(result)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm])
+    
+    const handleDeconnection = () => {
+        localStorage.removeItem("storageToken");
+        dispatch({
+            type: 'DISCONNECT'
+        })
+        history.push('/');
+    }
 
 
 
@@ -65,6 +86,7 @@ export default function Header() {
                     <li className="items">
                         <FontAwesomeIcon
                             icon={faHome}
+                            onClick={() => history.push('/home')}
                         />
                     </li>
                     <li className="items">
@@ -75,8 +97,20 @@ export default function Header() {
                     <li className="items">
                         <FontAwesomeIcon
                             icon={faSignOutAlt}
+                            onClick={handleDeconnection}
                         />
                     </li>
+                    {JSON.parse(localStorage.storageToken).userRole === 'Moderator' &&
+                    <li className="items">
+                        <FontAwesomeIcon
+                            icon={faUserShield}
+                            onClick={() => history.push('/ReportPage')}
+                        />
+                        <span>
+                            {reportsCount}
+                        </span>
+                    </li>
+                    }
                 </ul>
                 <div className="search-container">
                     <input
@@ -111,15 +145,38 @@ export default function Header() {
                 </div>
                 <nav className="nav-small">
                     <ul className="liste liste-small">
-                        <li className="items">Fil d'actualité</li>
-                        <li className="items">Mon profil</li>
-                        <li>
-                            <img 
-                                src={search} 
-                                alt="search button" 
-                                onClick={handleToggleSearch} 
-                                className="search-icon items"/>
+                        <li className="items">
+                            <FontAwesomeIcon
+                                icon={faHome}
+                            // onClick={() => history.push('/home')}
+                            />
                         </li>
+                        <li className="items">
+                            <FontAwesomeIcon
+                                icon={faUsers}
+                            />
+                        </li>
+                        <li className="items">
+                            <FontAwesomeIcon
+                                icon={faSignOutAlt}
+                                onClick={handleDeconnection}
+                            />
+                        </li>
+                        <li>
+                            <FontAwesomeIcon
+                                icon={faSearch}
+                                onClick={handleToggleSearch} 
+                                className="search-icon items"
+                            />
+                        </li>
+                        {JSON.parse(localStorage.storageToken).userRole === 'Moderator' &&
+                            <li className="items">
+                                <FontAwesomeIcon
+                                icon={faUserShield}
+                                onClick={() => history.push('/ReportPage')}
+                            />
+                            </li>
+                        }
                     </ul>
                 </nav>
                 {modalSearch &&

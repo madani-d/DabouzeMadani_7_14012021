@@ -1,0 +1,69 @@
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import Header from '../../Components/Header/Header';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch } from 'react-redux';
+import { deleteArticle } from '../../redux/articles/articleReducer';
+import { deleteArticleReported, loadReports } from '../../redux/reportReducer/reportReducer'
+import './ReportPage.scss';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
+export default function ReportPage() {
+    const { reported } = useSelector(state => ({
+    ...state.reportReducer
+    }));
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(loadReports());
+    }, [])
+
+    const handleDelete = articleId => {
+        dispatch(deleteArticleReported(articleId))
+        // dispatch(deleteArticle(articleId))
+    }
+
+    console.log(reported);
+    return (
+        <>
+            <Header/>
+            <main  className="report-page">
+                <h2>Articles Signalés</h2>
+                <section>
+                    {reported.articles.length ?
+                        reported.articles.map(item => (
+                            <article
+                                key={uuidv4()}
+                                className="light-container report-card">
+                                <div className="card-header">
+                                    <img
+                                        className="avatar light-container"
+                                        src={item.avatar}
+                                        alt="avatar" />
+                                    <p>{item.prenom} {item.nom}</p>
+                                </div>
+                                <figure>
+                                    <figcaption>
+                                        {item.texte_article}
+                                    </figcaption>
+                                    <img src={item.image_url} alt="" />
+                                </figure>
+                                <button
+                                    onClick={() => handleDelete(item.id)}
+                                >
+                                    <FontAwesomeIcon 
+                                        icon={faTrashAlt}
+                                    />
+                                </button>
+                            </article>
+                        ))
+                    :
+                        <h2>Aucuns Articles Signalés</h2>
+                    }
+                </section>
+            </main>
+        </>
+    )
+}

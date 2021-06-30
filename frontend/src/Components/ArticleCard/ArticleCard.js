@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Comment from '../CardComment/CardComment';
+import CommentCard from '../CommentCard/CommentCard';
 import CommentForm from '../CommentForm/CommentForm';
 // import ArticleForm from '../ArticleForm/ArticleForm';
 import ArticleUpdateForm from '../ArticleUpdateForm/ArticleUpdateForm';
@@ -10,10 +10,10 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHeart } from '@fortawesome/free-solid-svg-icons';
-import './CardArticle.scss';
+import './ArticleCard.scss';
 
 
-export default function CardArticle(props) {
+export default function ArticleCard(props) {
     const articles = props.articleData;
     const [showMore, setShowMore] = useState();
     const [option, setOption] = useState(false);
@@ -55,7 +55,7 @@ export default function CardArticle(props) {
                             alt={articles.nom}
                         />
                     </Link>
-                    {articles.nom} {articles.prenom}
+                    {articles.prenom} {articles.nom}
                 </h2>
                 <button
                     onClick={() => setOption(!option)}
@@ -117,7 +117,7 @@ export default function CardArticle(props) {
             }
             {showMore &&
                 articles.comments.map((item, index) => (
-                    <Comment commentData={item} index={index} articleId={articles.id} key={uuidv4()} />
+                    <CommentCard commentData={item} index={index} articleId={articles.id} key={uuidv4()} />
                 ))
             }
             <CommentForm articleId={articles.id}/>

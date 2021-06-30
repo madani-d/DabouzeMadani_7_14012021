@@ -10,7 +10,6 @@ import {
     reportArticle,
     getArticles
 } from '../controllers/article.js';
-import { sqlUpdateArticleText } from '../utils/scriptSQL.js';
 
 
 router.post('/article', auth, multer, createArticle);

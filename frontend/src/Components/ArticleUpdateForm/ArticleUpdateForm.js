@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
-import { updateArticle, updateArticleText } from '../../redux/articles/articleReducer';
+import { updateArticle } from '../../redux/articles/articleReducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../ArticleForm/ArticleForm.scss'
 import { faImages, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from 'react-hook-form';
 
-// import axios from 'axios';
-
 function ArticleUpdateForm({imageUrl, texteArticle, articleId, index, setModify, modify}) {
     console.log(imageUrl);
     const { register, handleSubmit, formState } = useForm();
     const [updatePreview, setUpdatePreview] = useState();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     console.log(formState);
 
     useEffect(() => {
-        setUpdatePreview(imageUrl)
+        setUpdatePreview(imageUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

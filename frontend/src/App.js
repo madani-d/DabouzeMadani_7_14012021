@@ -7,6 +7,7 @@ import Settings from './Containers/Settings/Settings';
 import ErrorPage from './Containers/ErrorPage/ErrorPage';
 import { useSelector } from 'react-redux';
 import { RestoreConnection } from './utils/restoreConnection'
+import ReportPage from './Containers/ReportPage/ReportPage';
 
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
               <Route path='/home' exact component={Home} />
               <Route path='/profile/:slug' exact component={Profile} />
               <Route path='/settings' exact component={Settings} />
+              <Route path='/ReportPage' exact component={ReportPage}/>
             </>
           }
 

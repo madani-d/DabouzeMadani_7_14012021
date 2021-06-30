@@ -33,3 +33,15 @@ export const getUsers = () => dispatch => {
         console.log(res.data.result);
     })
 }
+
+export const updateAvatar = data => dispatch => {
+    axios.put(`${process.env.REACT_APP_API_URL}/api/auth/updateAvatar`,
+    data,
+    { headers: {
+            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+    }}
+    )
+    .then(res => {
+        console.log(res);
+    })
+}

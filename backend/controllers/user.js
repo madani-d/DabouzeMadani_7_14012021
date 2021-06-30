@@ -2,11 +2,13 @@ import { db } from '../connectionDB.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dateJsToSql from '../utils/date.js';
+import * as fs from 'fs';
 import {
     sqlCheckEmail,
     sqlSignin,
     sqllogin,
-    sqlGetAllUsers
+    sqlGetAllUsers,
+    sqlUpdateAvatar
 } from '../utils/scriptSQL.js';
 
 
@@ -73,10 +75,11 @@ export const login = (req, res, next) => {
                         }
                         res.status(200).json({// Create and send Token
                             userId: result[0].id,
+                            userRole: result[0].role === 'M' ? 'Moderator' : 'User',
                             token: jwt.sign(
                             {userId: result[0].id},
                             process.env.SECRET_TOKEN_KEY,
-                            {expiresIn: '24h'}
+                            {expiresIn: '24h'},
                             )
                         });
                     })
@@ -95,6 +98,25 @@ export const getAllUsers = (req, res, next) => {
         (err, result) => {
             if (err) throw err;
             res.status(200).json({ result })
+        }
+    )
+}
+
+export const updateAvatar = (req, res, next) => {
+    const data = [
+        req.body.userId,
+        `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    ];
+    console.log(data);
+    console.log(req.body);
+    db.query(
+        sqlUpdateAvatar,
+        data,
+        (err, result) => {
+            console.log(result[0][0].avatar);
+            const filename = result[0][0].avatar.split('images/')[1]
+            fs.unlink(`images/${filename}`, (error => error));
+            res.status(200).json(result[1])
         }
     )
 }

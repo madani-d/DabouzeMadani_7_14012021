@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
 import { getUsers } from '../../redux/usersReducer/usersReduser';
 import ArticleForm from '../../Components/ArticleForm/ArticleForm';
-import CardArticle from '../../Components/CardArticle/CardArticle';
+import ArticleCard from '../../Components/ArticleCard/ArticleCard';
 import Header from '../../Components/Header/Header';
 import {v4 as uuidv4} from 'uuid';
+import { loadReports } from '../../redux/reportReducer/reportReducer';
 import './Home.scss';
 
 
@@ -34,6 +35,9 @@ export default function Home() {
     useEffect(() => {
         dispatch(getArticles());
         dispatch(getUsers());
+        if (JSON.parse(localStorage.storageToken).userRole === 'Moderator') {
+            dispatch(loadReports());
+        }
     }, [dispatch])
 
 
@@ -55,7 +59,7 @@ export default function Home() {
             <section className="thread">
             <ArticleForm/>
                 {articles.map((item, index) => (
-                    <CardArticle articleData={item} index={index} key={uuidv4()}/>
+                    <ArticleCard articleData={item} index={index} key={uuidv4()}/>
                 ))}
             </section>
 

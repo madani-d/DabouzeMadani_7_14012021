@@ -26,7 +26,8 @@ function Login() {
                 console.log(res);
                 const storageToken = {
                     "userId": res.data.userId,
-                    "token": res.data.token
+                    "token": res.data.token,
+                    "userRole": res.data.userRole
                 }
                 localStorage.setItem("storageToken", JSON.stringify(storageToken));
                 dispatch({

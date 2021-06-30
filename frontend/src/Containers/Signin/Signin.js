@@ -12,7 +12,7 @@ function Signin({  setUserId, setToken, setIsLogin }) {
     const { register, handleSubmit } = useForm();
     const [errorMessage, setErrorMessage] = useState("")
     const dispatch = useDispatch()
-    const [passwordValid, setPasswordValid] = useState(true)
+    // const [passwordValid, setPasswordValid] = useState(true)
 
     const history = useHistory();
 
@@ -123,12 +123,12 @@ function Signin({  setUserId, setToken, setIsLogin }) {
                         // onBlur={(e) => handleBlur(e.target)}
                         />
                     <p 
-                        className={
-                            passwordValid ?
-                                "info-password"
-                            :
-                                "info-password-invalid"
-                            }
+                        // className={
+                        //     passwordValid ?
+                        //         "info-password"
+                        //     :
+                        //         "info-password-invalid"
+                        //     }
                     >
                         *Min 8 caractères dont 1 minuscule, 1 majuscule, 1 chiffre</p>
                 </div>

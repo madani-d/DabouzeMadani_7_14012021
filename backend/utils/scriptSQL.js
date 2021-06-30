@@ -10,7 +10,7 @@ export const sqlSignin = `
     VALUES ( ?, ?, ?, 'U', ?, ?);`
 
 export const sqllogin = `
-    SELECT mdp, id  
+    SELECT mdp, id, role 
     FROM User  
     WHERE email = ?;`
 
@@ -64,10 +64,7 @@ export const sqlDeleteArticle = `
     AND user_id = ?;`
 
 export const sqlUpdateArticle = `
-    UPDATE Article  
-    SET image_url = ?, texte_article = ? 
-    WHERE id = ?  
-    AND user_id = ?;`
+    CALL update_article (?, ?, ?, ?);`
 
 export const sqlUpdateArticleText = `
         UPDATE Article
@@ -98,7 +95,7 @@ export const sqlGetComment = `
     WHERE Commentaire.article_id = ?  
     GROUP BY Commentaire.id;`
 
-    export const sqlDeleteComment = `
+export const sqlDeleteComment = `
     DELETE FROM Commentaire  
     WHERE id = ?  
     AND user_id = ?;`
@@ -155,3 +152,21 @@ export const sqlGetAllUsers = `
     SELECT id, prenom, nom, avatar, date_signin  
     FROM User  
     ORDER BY date_signin DESC;`
+
+export const sqlUpdateAvatar = `
+    CALL update_avatar(?, ?);
+`
+// Moderator
+
+export const sqlGetReports = `
+    CALL get_reports();
+`
+
+export const sqlModoAuth = `
+        SELECT role FROM User
+        WHERE id = ?;
+`
+
+export const sqlDeleteReportedArticle = `
+        CALL delete_reported_Article(?);
+`

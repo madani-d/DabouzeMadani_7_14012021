@@ -1,0 +1,20 @@
+.report-page {
+    margin: 150px auto 0;
+    width: 75%;
+    & section {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.fa-trash-alt {
+    color: red;
+}
+
+.report-card {
+    width: 300px;
+    margin: 0 30px 30px;
+    & figure img {
+        width: 100%;
+    }
+}
