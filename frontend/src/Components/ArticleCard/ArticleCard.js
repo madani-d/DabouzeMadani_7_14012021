@@ -19,6 +19,8 @@ export default function ArticleCard(props) {
     const [option, setOption] = useState(false);
     const [modify, setModify] = useState(false);
     const dispatch = useDispatch();
+
+    console.log(props.me);
     
     const handleLike = (articleId, index, likeValue) => {
         console.log(likeValue);

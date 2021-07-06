@@ -1,5 +1,6 @@
 import { createServer } from 'http';
 import app from './app.js';
+import { socketIO } from './socketio.js';
 
 const normalizePort = val => {
   const port = parseInt(val, 10);
@@ -45,3 +46,14 @@ server.on('listening', () => {
 });
 
 server.listen(port);
+
+/*********************  Chat with socket.io ****************/
+
+//initialisation socket.io
+
+
+socketIO(server);
+
+
+
+

@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '../../Components/Header/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
-import { deleteArticle } from '../../redux/articles/articleReducer';
-import { deleteArticleReported, loadReports } from '../../redux/reportReducer/reportReducer'
+import { deleteArticleReported, deleteCommentReported } from '../../redux/reportReducer/reportReducer'
 import './ReportPage.scss';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,13 +15,16 @@ export default function ReportPage() {
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(loadReports());
-    }, [])
+    // useEffect(() => {
+    //     dispatch(loadReports());
+    // }, [])
 
-    const handleDelete = articleId => {
+    const handleDeleteArticle = articleId => {
         dispatch(deleteArticleReported(articleId))
-        // dispatch(deleteArticle(articleId))
+    }
+
+    const handleDeleteComment = commentId => {
+        dispatch(deleteCommentReported(commentId))
     }
 
     console.log(reported);
@@ -51,7 +53,7 @@ export default function ReportPage() {
                                     <img src={item.image_url} alt="" />
                                 </figure>
                                 <button
-                                    onClick={() => handleDelete(item.id)}
+                                    onClick={() => handleDeleteArticle(item.id)}
                                 >
                                     <FontAwesomeIcon 
                                         icon={faTrashAlt}
@@ -61,6 +63,36 @@ export default function ReportPage() {
                         ))
                     :
                         <h2>Aucuns Articles Signalés</h2>
+                    }
+                </section>
+                <h2>Commentaires Signalés</h2>
+                <section>
+                    {reported.comments.length ?
+                        reported.comments.map(item => (
+                            <article
+                                key={uuidv4()}
+                                className="light-container report-card">
+                                <div className="card-header">
+                                    <img
+                                        className="avatar light-container"
+                                        src={item.avatar}
+                                        alt="avatar" />
+                                    <p>{item.prenom} {item.nom}</p>
+                                </div>
+                                <p>
+                                    {item.texte_commentaire}
+                                </p>
+                                <button
+                                    onClick={() => handleDeleteComment(item.id)}
+                                >
+                                    <FontAwesomeIcon 
+                                        icon={faTrashAlt}
+                                    />
+                                </button>
+                            </article>
+                        ))
+                    :
+                        <h2>Aucuns Commentaires Signalés</h2>
                     }
                 </section>
             </main>

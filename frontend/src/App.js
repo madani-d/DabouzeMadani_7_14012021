@@ -4,11 +4,11 @@ import Login from './Containers/Login/Login';
 import Profile from './Containers/Profile/Profile';
 import Home from './Containers/Home/Home';
 import Settings from './Containers/Settings/Settings';
+import ChatRoom from './Containers/ChatRoom/ChatRoom';
 import ErrorPage from './Containers/ErrorPage/ErrorPage';
 import { useSelector } from 'react-redux';
 import { RestoreConnection } from './utils/restoreConnection'
 import ReportPage from './Containers/ReportPage/ReportPage';
-
 
 export default function App() {
   
@@ -32,13 +32,12 @@ export default function App() {
           {connected &&
             <>
               <Route path='/home' exact component={Home} />
+              <Route path='/chat' exact component={ChatRoom}/>
               <Route path='/profile/:slug' exact component={Profile} />
               <Route path='/settings' exact component={Settings} />
               <Route path='/ReportPage' exact component={ReportPage}/>
             </>
           }
-
-
         </Switch>
       </Router>
     </>

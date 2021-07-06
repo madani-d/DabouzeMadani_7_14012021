@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dateJsToSql from '../utils/date.js';
 import * as fs from 'fs';
+import { v5 as uuidv5 } from 'uuid';
 import {
     sqlCheckEmail,
     sqlSignin,
@@ -33,20 +34,26 @@ export const signin = (req, res, next) => {
                 req.body.email,
                 dateJsToSql(date),
                 hash,)
+            const namespace = `1b671a64-40d5-491e-99b0-da01ff1f3341`;
+            const id = `${user[0]}${user[3]}`;
+            const uuid = uuidv5(id, namespace);
+            user.push(uuid);
 
             db.query(sqlSignin, user, (err, result) => {// Create User in DB
                 if (err) throw err;
                 res.status(200).json({// Create and send token
                     userId: result.insertId,
                     token: jwt.sign(
-                    {userId: result.insertId},
+                    {userUuid: uuid},
                     process.env.SECRET_TOKEN_KEY,
                     {expiresIn: '24h'}
                     )
                 })
             })
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ error })});
 
     })
 };
@@ -77,7 +84,7 @@ export const login = (req, res, next) => {
                             userId: result[0].id,
                             userRole: result[0].role === 'M' ? 'Moderator' : 'User',
                             token: jwt.sign(
-                            {userId: result[0].id},
+                            {userUuid: result[0].uuid},
                             process.env.SECRET_TOKEN_KEY,
                             {expiresIn: '24h'},
                             )

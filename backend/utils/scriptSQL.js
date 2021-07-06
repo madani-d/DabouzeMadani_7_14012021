@@ -3,16 +3,20 @@ export const sqlCheckEmail = `
     SELECT COUNT(*) AS present  
     FROM User WHERE email = ?;
 `
-
 export const sqlSignin = `
     INSERT INTO User  
-    (nom, prenom, email, role, date_signin, mdp) 
-    VALUES ( ?, ?, ?, 'U', ?, ?);`
+    (nom, prenom, email, role, date_signin, mdp, uuid) 
+    VALUES ( ?, ?, ?, 'U', ?, ?, ?);`
 
 export const sqllogin = `
-    SELECT mdp, id, role 
+    SELECT mdp, id, role, uuid 
     FROM User  
     WHERE email = ?;`
+
+export const sqlAuthToken = `
+    SELECT uuid FROM User 
+    WHERE id = ?;
+`
 
 // Articles
 export const sqlCreateArticle = `
@@ -73,13 +77,8 @@ export const sqlUpdateArticleText = `
         AND user_id = ?;
 `
 
-export const sqlReportArticle = `
-    INSERT INTO Report  
-    (user_id, article_id)  
-    VALUES (?, ?);`
-
-
 // Comments
+
 export const sqlCreateComment = `
     CALL create_commentaire (?, ?, ?, ?);`
 
@@ -106,12 +105,8 @@ export const sqlUpdateComment = `
     WHERE id = ?  
     AND user_id = ?;`
 
-export const sqlReportComment = `
-    INSERT INTO Report  
-    (user_id, commentaire_id)  
-    VALUES (?, ?);`
-
 //LikePost Articles
+
 export const sqlLikeArticle = `
     INSERT INTO Likepost 
     (user_id, article_id) 
@@ -156,6 +151,32 @@ export const sqlGetAllUsers = `
 export const sqlUpdateAvatar = `
     CALL update_avatar(?, ?);
 `
+
+// Report
+
+export const sqlReportArticle = `
+    INSERT INTO Report  
+    (user_id, article_id)  
+    VALUES (?, ?);`
+
+export const sqlCheckArticleReported = `
+    SELECT * FROM Report
+    WHERE user_id = ?
+    AND article_id = ?;
+`
+
+export const sqlReportComment = `
+    INSERT INTO Report  
+    (user_id, commentaire_id)  
+    VALUES (?, ?);`
+
+export const sqlCheckCommentReported = `
+    SELECT * FROM Report
+    WHERE user_id = ?
+    AND commentaire_id = ?;
+`
+
+
 // Moderator
 
 export const sqlGetReports = `
@@ -163,10 +184,35 @@ export const sqlGetReports = `
 `
 
 export const sqlModoAuth = `
-        SELECT role FROM User
-        WHERE id = ?;
+    SELECT role FROM User
+    WHERE id = ?;
 `
 
 export const sqlDeleteReportedArticle = `
-        CALL delete_reported_Article(?);
+    CALL delete_reported_Article(?);
+`
+
+export const sqlDeleteReportedComment = `
+    DELETE FROM Commentaire
+    WHERE id = ?;
+`
+
+// Chat
+
+export const sqlLoadChat = `
+    SELECT user_id, texte_chat, Chat.date_post,
+    prenom, nom, avatar
+    FROM Chat
+    INNER JOIN User
+    ON Chat.user_id = User.id;
+`
+
+export const sqlInsertMessageChat = `
+    INSERT INTO Chat (user_id, texte_chat, date_post)
+    VALUES (?, ?, ?);
+`
+
+export const sqlChatUserData = `
+    SELECT prenom, nom, avatar FROM User
+    WHERE id = ?;
 `

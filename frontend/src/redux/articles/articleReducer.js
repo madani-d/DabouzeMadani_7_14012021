@@ -114,9 +114,10 @@ export default articleReducer;
 
 export const getArticles = () => dispatch => {
     axios(`${process.env.REACT_APP_API_URL}/api/article/getall`,
-        { headers : {
-        "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        }
     )
     .then(res => {
         console.log(res);
@@ -133,10 +134,14 @@ export const getArticles = () => dispatch => {
 export const postArticle = (data, fileType) => dispatch =>{
     axios.post(`${process.env.REACT_APP_API_URL}/api/article/article`,
         data,
-        { headers: {
-            "Content-Type": `${fileType}`,
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-    }})
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers: {
+                "Content-Type": `${fileType}`,
+                "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
+            }
+        }
+    )
 
         .then(res => {
             dispatch({
@@ -148,10 +153,11 @@ export const postArticle = (data, fileType) => dispatch =>{
 
 export const postComment = (articleId, comment) => dispatch => {
     axios.post(`${process.env.REACT_APP_API_URL}/api/comment`,
-    {articleId, comment},
-    { headers: {
-        "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-    }}
+        {articleId, comment},
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        }
     )
     .then(res => {
         console.log(res);
@@ -170,9 +176,10 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
     if (likeValue) {
         axios.post(`${process.env.REACT_APP_API_URL}/api/unlikeArticle`,
             {articleId},
-            { headers: {
-                "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-            }}
+            {
+                params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+                headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+            }
         )
         .then(res => {
             console.log(res);
@@ -184,9 +191,10 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
     } else {
         axios.post(`${process.env.REACT_APP_API_URL}/api/likeArticle`,
             {articleId},
-            { headers: {
-                    "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-            }}
+            {
+                params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+                headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+            }
         )
         .then(res => {
             console.log(res);
@@ -203,9 +211,10 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
     if (likeValue) {
         axios.post(`${process.env.REACT_APP_API_URL}/api/likeComment`,
             {commentId},
-            { headers: {
-                    "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-            }}
+            {
+                params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+                headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+            }
         )
         .then(res => {
             console.log(res);
@@ -218,9 +227,10 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
     } else {
         axios.post(`${process.env.REACT_APP_API_URL}/api/unlikeComment`,
             {commentId},
-            { headers: {
-                "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-            }}
+            {
+                params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+                headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+            }
         )
         .then(res => {
             console.log(res);
@@ -234,10 +244,10 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
 };
 
 export const deleteArticle = articleId  => dispatch => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/api/article/delete`,{
-        headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        },
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/article/delete`,
+    {
+        params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+        headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token },
         data: { articleId }
     })
     .then(res => {
@@ -251,12 +261,13 @@ export const deleteArticle = articleId  => dispatch => {
 }
 
 export const deleteComment = (commentId, articleId) => dispatch => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/delete`,{
-        headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        },
-        data: { commentId }
-    })
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/comment/delete`,
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token },
+            data: { commentId }
+        }
+    )
     .then(res => {
         console.log(res);
         dispatch({
@@ -270,11 +281,14 @@ export const deleteComment = (commentId, articleId) => dispatch => {
 export const updateArticle = (data, articleId, fileType) => dispatch => {
     if (fileType) {
         axios.put(`${process.env.REACT_APP_API_URL}/api/article/updateArticle`, 
-        data,
-        { headers: {
-            "Content-Type": `${fileType}`,
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
+            data,
+            {
+                params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+                headers: {
+                    "Content-Type": `${fileType}`,
+                    "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token
+                }
+            }
         )
         .then(res => {
             console.log(res.data);
@@ -286,10 +300,11 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
         })
     } else {
         axios.put(`${process.env.REACT_APP_API_URL}/api/article/updateText`, 
-        data,
-        { headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
+            data,
+            {
+                params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+                headers: { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token },
+            }
         )
         .then(res => {
             console.log(res.data);
@@ -305,21 +320,25 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
 export const reportArticle = articleId => dispatch => {
     axios.post(`${process.env.REACT_APP_API_URL}/api/article/report`,
         {articleId},
-        {headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        }
     )
     .then(res => {
-        res.data.message === "deja signalé" && alert("Vous avez déja signalé cette article.");
+        res.data.message === "déja signalé" && alert("Vous avez déja signalé cette article.");
     })
 }
 
 export const reportComment = commentId => dispatch => {
-    axios.post(`${process.env.REACT_APP_API_URL}/api/commentaire/report`,
+    axios.post(`${process.env.REACT_APP_API_URL}/api/comment/report`,
         {commentId},
-        {headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        }
     )
-    .then(res => console.log(res))
+    .then(res => {
+        res.data.message === "déja signalé" && alert("vous avez déja signalé ce commentaire.")
+    })
 } 

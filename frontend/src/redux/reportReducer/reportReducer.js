@@ -52,9 +52,10 @@ export default reportArticle;
 
 export const loadReports = () => dispatch => {
     axios(`${process.env.REACT_APP_API_URL}/api/moderator/getReports`,
-        { headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token
-        }}
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        }
     )
     .then(res => {
         console.log(res.data[0])
@@ -67,21 +68,34 @@ export const loadReports = () => dispatch => {
 }
 
 export const deleteArticleReported = articleId => dispatch => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/api/moderator/deleteArticle`,{
-        headers: {
-            "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        },
-        data: { articleId }
-    })
-    dispatch({
-        type: 'DELETE_ARTICLE_REPORTED',
-        payload: articleId
+    console.log(articleId);
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/moderator/deleteArticle`,
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token },
+            data: { articleId }
+        }
+    )
+    .then(res => {
+        dispatch({
+            type: 'DELETE_ARTICLE_REPORTED',
+            payload: articleId
+        })
     })
 }
 
-export const deleteCommentReported = articleId => dispatch => {
-    dispatch({
-        type: 'DELETE_COMMENT_REPORTED',
-        payload: articleId
-    })
+export const deleteCommentReported = commentId => dispatch => {
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/moderator/deleteComment`,
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token },
+            data: { commentId }
+        }
+    )
+        .then(res => {
+            dispatch({
+                type: 'DELETE_COMMENT_REPORTED',
+                payload: commentId
+            })
+        })
 }

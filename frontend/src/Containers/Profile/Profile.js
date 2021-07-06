@@ -1,14 +1,15 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import ArticleCard from '../../Components/ArticleCard/ArticleCard';
 import {v4 as uuidv4} from 'uuid';
 import Header from '../../Components/Header/Header';
 import ProfilCard from '../../Components/ProfilCard/ProfilCard';
+import { getUsers } from '../../redux/usersReducer/usersReduser';
 
 
 export default function Profile() {
-
+    const dispatch = useDispatch()
     const { articles } = useSelector(state => ({
         ...state.articleReducer
     }))
@@ -25,6 +26,10 @@ export default function Profile() {
     const { users } = useSelector(state => ({
         ...state.usersReducer
     }))
+
+    useEffect(() => {
+        dispatch(getUsers())
+    }, [])
 
     const user = users.find(element => element.id === userId)
     console.log(user);

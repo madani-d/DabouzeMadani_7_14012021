@@ -1,13 +1,13 @@
 import { db } from "../connectionDB.js";
 import * as fs from 'fs';
-import { sqlDeleteReportedArticle, sqlGetReports } from "../utils/scriptSQL.js";
+import { sqlDeleteReportedArticle, sqlDeleteReportedComment, sqlGetReports } from "../utils/scriptSQL.js";
 
 export const getReports = (req, res, next) => {
     db.query(sqlGetReports,
         res.locals.userId,
         (err, result) => {
             if (err) throw err;
-            console.log(result);
+            // console.log(result);
             res.status(200).json(result)
         }
     )
@@ -22,6 +22,16 @@ export const deleteReportedArticle = (req, res, next) => {
             fs.unlink(`images/${filename}`, (error => error));
             if (err) throw err;
             res.status(200).json({ message: "Article signalé supprimé" })
+        }
+    )
+}
+
+export const deleteReportedComment = (req, res, next) => {
+    db.query(sqlDeleteReportedComment,
+        req.body.commentId,
+        (err, result) => {
+            if (err) throw err;
+            res.status(200).json({ message: "Commentaire signalé supprimé" })
         }
     )
 }

@@ -1,0 +1,20 @@
+.chat-form {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    height: 30px;
+    margin-bottom: 10px;
+    justify-content: center;
+    padding: 5px;
+    & input {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+}
+
+.chat-list {
+    margin-top: 150px;
+    list-style-type: none;
+}

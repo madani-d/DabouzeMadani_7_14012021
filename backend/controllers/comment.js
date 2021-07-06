@@ -5,7 +5,8 @@ import {
     sqlGetComment,
     sqlDeleteComment,
     sqlUpdateComment,
-    sqlReportComment
+    sqlReportComment,
+    sqlCheckCommentReported
 } from '../utils/scriptSQL.js';
 
 
@@ -58,8 +59,16 @@ export const updateComment = (req, res, next) => {
 
 export const reportComment = (req, res, next) => {
     const data = [res.locals.userId, req.body.commentId]
-    db.query(sqlReportComment, data, (err, result) => {
-        if (err) throw err;
-        res.status(201).json({ message: "commentaire signalé" })
+    db.query(sqlCheckCommentReported,
+        data,
+        (err, result) => {
+            if (result[0]) {
+                res.status(200).json({ message: "déja signalé" })
+            } else {
+                db.query(sqlReportComment, data, (err, result) => {
+                    if (err) throw err;
+                    res.status(201).json({ message: "commentaire signalé" })
+                })
+            }
     })
 }

@@ -3,7 +3,8 @@ import articleRoutes from './routes/article.js';
 import userRoutes from './routes/user.js';
 import commentRoutes from './routes/comment.js';
 import likeRoutes from './routes/like.js';
-import moderatorRoutes from './routes/moderator.js'
+import moderatorRoutes from './routes/moderator.js';
+import chatRoutes from './routes/chat.js'
 
 const app = express();
 app.use((req, res, next) => {
@@ -21,5 +22,6 @@ app.use('/api/article', articleRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api', likeRoutes);
 app.use('/api/moderator', moderatorRoutes);
+app.use('/api/chat', chatRoutes);
 
 export default app;

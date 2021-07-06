@@ -1,7 +1,10 @@
 .report-page {
     margin: 150px auto 0;
     width: 75%;
+    text-align: center;
     & section {
+        border-top: 1px solid black;
+        padding: 30px 0;
         display: flex;
         flex-wrap: wrap;
     }

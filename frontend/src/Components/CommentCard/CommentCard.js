@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { likeComment } from '../../redux/articles/articleReducer';
 import OptionsToggle from '../OptionsToggle/OptionsToggle';
 import React, { useState } from 'react';
-import { deleteComment } from '../../redux/articles/articleReducer';
+import { deleteComment, reportComment } from '../../redux/articles/articleReducer';
 import './CommentCard.scss';
 
 export default function CommentCard(props) {
@@ -19,10 +19,10 @@ export default function CommentCard(props) {
         dispatch(likeComment(commentId, index, articleId, likeValue));
     }
 
-    // const handleReport = articleId => {
-    //     dispatch(reportComment(articleId))
-    //     setOption(false);
-    // }
+    const handleReport = articleId => {
+        dispatch(reportComment(articleId))
+        setOption(false);
+    }
 
     const handleDelete = (commentId, articleId) => {
         setOption(false);
@@ -48,7 +48,7 @@ export default function CommentCard(props) {
             </div>
             {option && 
             <OptionsToggle
-                // handleReport={handleReport}
+                handleReport={handleReport}
                 handleDelete={handleDelete}
                 setModify={setModify}
                 modify={modify}

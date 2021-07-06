@@ -18,9 +18,7 @@ export default function Home() {
         ...state.articleReducer
     }))
 
-    const { users } = useSelector(state => ({
-        ...state.usersReducer
-    }))
+    const { users } = useSelector(state => state.usersReducer)
 
     const { connected } = useSelector(state => ({
         ...state.connectedReducer
@@ -41,15 +39,21 @@ export default function Home() {
     }, [dispatch])
 
 
-    
+    // users[0] &&
+    //     
+    //     console.log(users);
+
+
+
+
     console.log(users);
-    const handleDeconnection = () => {
-        localStorage.removeItem("storageToken");
-        dispatch({
-            type: 'DISCONNECT'
-        })
-        history.push('/');
-    }
+    // const handleDeconnection = () => {
+    //     localStorage.removeItem("storageToken");
+    //     dispatch({
+    //         type: 'DISCONNECT'
+    //     })
+    //     history.push('/');
+    // }
 
     // const mostLiked = articles.sort((a, b) => b.articleLikes - a.articleLikes).slice(0, 5);
 
@@ -62,8 +66,6 @@ export default function Home() {
                     <ArticleCard articleData={item} index={index} key={uuidv4()}/>
                 ))}
             </section>
-
-            <button onClick={handleDeconnection}>Déconnexion</button>
         </>
 
     )

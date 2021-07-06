@@ -12,7 +12,8 @@ import {
     sqlUpdateArticle,
     sqlUpdateArticleText,
     sqlReportArticle,
-    sqlGetArticles
+    sqlGetArticles,
+    sqlCheckArticleReported
 } from '../utils/scriptSQL.js';
 
 // Create Article
@@ -53,9 +54,10 @@ export const createArticle = (req, res, next) => {
 // Get all articles
 
 export const getArticles = (req, res, next) => {
+    console.log(res.params);
     const userId = res.locals.userId;
     db.query(sqlGetArticles, [userId, userId], (err, result) => {
-        if (err) throw err;
+        if (err) throw "bloqué";
         const articles = []
         for (let i = 0; i < result.length; i++) {
             const comments = {}
@@ -152,17 +154,19 @@ export const updateArticleText = (req, res, next) => {
 export const reportArticle = (req, res, next) => {
     console.log(req.body);
     const data = [res.locals.userId, req.body.articleId]
-    db.query('select * from Report where user_id = ? and article_id = ?;', data, (err, result) => {
-        if (err) throw err;
-        if (result[0]) {
-            console.log('deja signalé');
-            res.status(200).json({ message: "deja signalé" })
-        } else {
-            console.log('pas encore signalé');
-            db.query(sqlReportArticle, data, (err, result) => {
-                if (err) throw err;
-                res.status(200).json({ message: "article signalé" })
-            })
-        }
+    db.query(sqlCheckArticleReported,
+        data,
+        (err, result) => {
+            if (err) throw err;
+            if (result[0]) {
+                console.log('deja signalé');
+                res.status(200).json({ message: "déja signalé" })
+            } else {
+                console.log('pas encore signalé');
+                db.query(sqlReportArticle, data, (err, result) => {
+                    if (err) throw err;
+                    res.status(200).json({ message: "article signalé" })
+                })
+            }
     })
 }

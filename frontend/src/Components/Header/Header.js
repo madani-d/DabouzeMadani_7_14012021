@@ -7,7 +7,7 @@ import ModalSearch from '../ModalSearch/ModalSearch';
 import Logo from '../../assets/icon-left-font-monochrome-black.svg';
 import WhiteLogo from '../../assets/icon-left-font-monochrome-white.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faSearch, faSignOutAlt, faUsers, faUserShield } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faHome, faSearch, faSignOutAlt, faUsers, faUserShield } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
     const { users } = useSelector(state => ({
@@ -91,7 +91,8 @@ export default function Header() {
                     </li>
                     <li className="items">
                         <FontAwesomeIcon
-                            icon={faUsers}
+                            icon={faComments}
+                            onClick={() => history.push('/chat')}
                         />
                     </li>
                     <li className="items">

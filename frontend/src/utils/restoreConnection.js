@@ -3,10 +3,11 @@ import { useDispatch } from 'react-redux';
 
 export const RestoreConnection = () => {
     const dispatch = useDispatch()
-    axios(`${process.env.REACT_APP_API_URL}/api/auth/restoreConnection`,
-    { headers : {
-        "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token,
-        }}
+    axios.get(`${process.env.REACT_APP_API_URL}/api/auth/restoreConnection`,
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        } 
     )
     .then(result => {
         console.log(result);
