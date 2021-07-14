@@ -31,7 +31,7 @@ export const createArticle = (req, res, next) => {
     console.log(article);
     console.log("rêquete reçu");
     db.query(sqlCreateArticle, article, (err, result) => {
-        if (err) throw err;
+        if (err) res.status(500).json({error: "erreur serveur"});
         const article = result[0][0];
         const newArticle = {
             id: article.id,
@@ -55,9 +55,9 @@ export const createArticle = (req, res, next) => {
 
 export const getArticles = (req, res, next) => {
     console.log(res.params);
-    const userId = res.locals.userId;
+    const userId = parseInt(res.locals.userId);
     db.query(sqlGetArticles, [userId, userId], (err, result) => {
-        if (err) throw "bloqué";
+        if (err) res.status(500).json({error: "erreur serveur"});
         const articles = []
         for (let i = 0; i < result.length; i++) {
             const comments = {}
@@ -103,14 +103,14 @@ export const deleteArticle = (req, res, next) => {
     try {
         
         db.query(sqlGetDeleteFilename, data, (err, result) => {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             console.log(result);
             const filename = result[0].image_url.split('images/')[1]
             fs.unlink(`images/${filename}`, (error => error));
         })
         
         db.query(sqlDeleteArticle, data, (err, result) => {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             res.status(201).json({ message: "article supprimé" })
         })
     } catch {
@@ -126,7 +126,7 @@ export const updateArticle = (req, res, next) => {
         res.locals.userId,
     ]
     db.query(sqlUpdateArticle, data, (err, result) => {
-        if (err) throw err;
+        if (err) res.status(500).json({error: "erreur serveur"});
         const filename = result[0][0].image_url.split('images/')[1];
         fs.unlink(`images/${filename}`, (error => error));
         const response = {
@@ -146,7 +146,7 @@ export const updateArticleText = (req, res, next) => {
         res.locals.userId,
     ]
     db.query(sqlUpdateArticleText, data, (err, result) => {
-        if (err) throw err;
+        if (err) res.status(500).json({error: "erreur serveur"});
         res.status(201).json(req.body.article)
     })
 }
@@ -157,14 +157,14 @@ export const reportArticle = (req, res, next) => {
     db.query(sqlCheckArticleReported,
         data,
         (err, result) => {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             if (result[0]) {
                 console.log('deja signalé');
                 res.status(200).json({ message: "déja signalé" })
             } else {
                 console.log('pas encore signalé');
                 db.query(sqlReportArticle, data, (err, result) => {
-                    if (err) throw err;
+                    if (err) res.status(500).json({error: "erreur serveur"});
                     res.status(200).json({ message: "article signalé" })
                 })
             }

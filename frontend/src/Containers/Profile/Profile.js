@@ -29,6 +29,7 @@ export default function Profile() {
 
     useEffect(() => {
         dispatch(getUsers())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const user = users.find(element => element.id === userId)

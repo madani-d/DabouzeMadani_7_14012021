@@ -42,13 +42,18 @@ function ArticleUpdateForm({imageUrl, texteArticle, articleId, index, setModify,
         data.file[0] ? console.log('type') : console.log('pas type');
     }
 
+    const handleResize = e => {
+        e.target.style.height = e.target.scrollHeight + "px"
+    }
+
     return (
         <form
             className="form-article"
             onSubmit={handleSubmit(onSubmit)}>
-            <input
+            <textarea
                 autoFocus
-                type="text"
+                onInput={e => handleResize(e)}
+                onFocus={e => handleResize(e)}
                 aria-label="ajouter un article"
                 placeholder="Quoi de neuf ?"
                 className="form-article-input"

@@ -18,23 +18,29 @@ function Formulaire() {
         formData.append("article", data.article);
         formData.append("file", data.file[0]);
         console.log(formData);
-        console.log(data.file[0].type);
+        // console.log(data.file[0].type);
         dispatch(postArticle(formData, data.file[0].type));
         e.target.reset();
         setPreview();
     }
 
     const handleFile = e => {
-        console.log(e);
+        console.log(URL.createObjectURL(e.target.files[0]));
         setPreview(URL.createObjectURL(e.target.files[0]))
+    }
+
+    const handleResize = e => {
+        e.target.style.height = e.target.scrollHeight + "px"
     }
 
     return (
         <form
             className="form-article"
             onSubmit={handleSubmit(onSubmit)}>
-            <input
-                type="text"
+            <textarea
+                onInput={e => handleResize(e)}
+                // 'this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                // type="text"
                 aria-label="ajouter un article"
                 placeholder="Quoi de neuf ?"
                 className="form-article-input"

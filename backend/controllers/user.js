@@ -11,9 +11,15 @@ import {
     sqlGetAllUsers,
     sqlUpdateAvatar
 } from '../utils/scriptSQL.js';
+import { validationResult } from 'express-validator';
 
 
 export const signin = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+
     const user = [];// Create array to fill SQL request
     db.query(
         sqlCheckEmail,
@@ -52,15 +58,12 @@ export const signin = (req, res, next) => {
             })
         })
         .catch(error => {
-            console.log(error);
             res.status(500).json({ error })});
 
     })
 };
 
 export const login = (req, res, next) => {
-    console.log(req.body);
-
     db.query(
         sqlCheckEmail,
         req.body.email,
@@ -110,6 +113,7 @@ export const getAllUsers = (req, res, next) => {
 }
 
 export const updateAvatar = (req, res, next) => {
+    console.log(req.file);
     const data = [
         req.body.userId,
         `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,

@@ -20,3 +20,23 @@ export const auth = (req, res, next) => {
         )
     } catch (error) { res.status(401).json({ error }) }
 };
+
+export const socketAuth = (socket, next) => {
+    const { userId, token } = socket.handshake.auth
+        if (userId && token) {
+            db.query(sqlAuthToken,
+                [userId],
+                (err, result) => {
+                    if (err) console.log(err);
+                    console.log(userId);
+                    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
+                    if (decodedToken.userUuid === result[0].uuid) {
+                        console.log('chat ouvert');
+                        next()
+                    } else {
+                        console.log('accés refusé');
+                    }
+                }
+            )
+        }
+}

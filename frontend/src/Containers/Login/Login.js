@@ -1,10 +1,10 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import logo from '../../assets/without-icon.svg';
 import icon from '../../assets/icon.svg';
+import axios from 'axios';
 import './Login.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faLock } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,6 @@ require('dotenv').config();
 function Login() {
     const { register, handleSubmit, } = useForm();
     const [errorMessage, setErrorMessage] = useState("")
-
     const dispatch = useDispatch();
 
     const history = useHistory();
@@ -30,9 +29,7 @@ function Login() {
                     "userRole": res.data.userRole
                 }
                 localStorage.setItem("storageToken", JSON.stringify(storageToken));
-                dispatch({
-                    type: 'CONNECT'
-                })                
+                dispatch({ type: 'CONNECT' })                
                 history.push('/home');
             })
             .catch(err => {

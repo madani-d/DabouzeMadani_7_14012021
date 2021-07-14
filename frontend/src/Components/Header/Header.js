@@ -7,7 +7,15 @@ import ModalSearch from '../ModalSearch/ModalSearch';
 import Logo from '../../assets/icon-left-font-monochrome-black.svg';
 import WhiteLogo from '../../assets/icon-left-font-monochrome-white.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComments, faHome, faSearch, faSignOutAlt, faUsers, faUserShield } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faHome, faSearch, faSignOutAlt, faUserShield } from '@fortawesome/free-solid-svg-icons';
+// import { loadChat } from '../../redux/socketReducer/socketReducer';
+// import io from 'socket.io-client';
+// const socket = io.connect(process.env.REACT_APP_API_URL, {path: '/groupomania_chat/'});
+// socket.auth = localStorage.storageToken && { 
+//     token: JSON.parse(localStorage.storageToken).token,
+//     userId: JSON.parse(localStorage.storageToken).userId
+// }
+// socket.connect();
 
 export default function Header() {
     const { users } = useSelector(state => ({
@@ -25,7 +33,6 @@ export default function Header() {
     const reportsCount = useSelector(state => (
         state.reportReducer.reported.count
     ))
-    console.log('header render');
     const dispatch = useDispatch();
     const history = useHistory();
     !connected && history.push('/');
@@ -34,7 +41,11 @@ export default function Header() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [modalSearch, setModalSearch] = useState(false);
-    
+
+    // useEffect(() => {
+    //     dispatch(loadChat())
+    // }, [])
+
     useEffect(() => {
         const changeWidth = () => {
             setWindowWidth(window.innerWidth);
@@ -95,12 +106,6 @@ export default function Header() {
                             onClick={() => history.push('/chat')}
                         />
                     </li>
-                    <li className="items">
-                        <FontAwesomeIcon
-                            icon={faSignOutAlt}
-                            onClick={handleDeconnection}
-                        />
-                    </li>
                     {JSON.parse(localStorage.storageToken).userRole === 'Moderator' &&
                     <li className="items">
                         <FontAwesomeIcon
@@ -112,6 +117,12 @@ export default function Header() {
                         </span>
                     </li>
                     }
+                    <li className="items">
+                        <FontAwesomeIcon
+                            icon={faSignOutAlt}
+                            onClick={handleDeconnection}
+                        />
+                    </li>
                 </ul>
                 <div className="search-container">
                     <input
@@ -149,19 +160,14 @@ export default function Header() {
                         <li className="items">
                             <FontAwesomeIcon
                                 icon={faHome}
-                            // onClick={() => history.push('/home')}
+                            onClick={() => history.push('/home')}
                             />
                         </li>
                         <li className="items">
-                            <FontAwesomeIcon
-                                icon={faUsers}
-                            />
-                        </li>
-                        <li className="items">
-                            <FontAwesomeIcon
-                                icon={faSignOutAlt}
-                                onClick={handleDeconnection}
-                            />
+                        <FontAwesomeIcon
+                            icon={faComments}
+                            onClick={() => history.push('/chat')}
+                        />
                         </li>
                         <li>
                             <FontAwesomeIcon
@@ -178,6 +184,12 @@ export default function Header() {
                             />
                             </li>
                         }
+                        <li className="items">
+                            <FontAwesomeIcon
+                                icon={faSignOutAlt}
+                                onClick={handleDeconnection}
+                            />
+                        </li>
                     </ul>
                 </nav>
                 {modalSearch &&

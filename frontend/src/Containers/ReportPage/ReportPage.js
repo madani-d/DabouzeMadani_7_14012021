@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '../../Components/Header/Header';
+import { loadReports } from '../../redux/reportReducer/reportReducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 import { deleteArticleReported, deleteCommentReported } from '../../redux/reportReducer/reportReducer'
@@ -9,15 +10,13 @@ import './ReportPage.scss';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function ReportPage() {
-    const { reported } = useSelector(state => ({
-    ...state.reportReducer
-    }));
+    const { reported } = useSelector(state => state.reportReducer);
 
     const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     dispatch(loadReports());
-    // }, [])
+    useEffect(() => {
+        dispatch(loadReports());
+    }, [dispatch])
 
     const handleDeleteArticle = articleId => {
         dispatch(deleteArticleReported(articleId))
