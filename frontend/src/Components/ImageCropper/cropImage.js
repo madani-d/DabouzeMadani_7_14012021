@@ -83,10 +83,11 @@ export const generateDownload = async (imageSrc, crop, imageData) => {
         
         return new File([u8arr], filename, {type:mime});
     }
-    console.log(canvas.toDataURL());
+    // console.log(canvas.toDataURL());
     const test = dataURLtoFile(canvas.toDataURL(), name, type);
-    sendAvatar(test);
+    // sendAvatar(test);
     console.log(test);
+    return test;
 
     // canvas.toBlob(
     //     blob => {

@@ -16,13 +16,7 @@ export default function CommentForm({ articleId }) {
     const onSubmit = (data) => {
         console.log(data.comment);
         console.log(articleId);
-        dispatch(postComment(articleId, data.comment))
-        // const formData = new FormData();
-        // formData.append("userId", JSON.parse(localStorage.storageToken).userId);
-        // formData.append("articleId", props.articleId);
-        // formData.append("comment", comm);
-        // console.log(comm);
-        // setComm("");
+        dispatch(postComment(articleId, data.comment));
     }
 
     return (

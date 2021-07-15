@@ -10,21 +10,21 @@ import './ArticleForm.scss';
 function Formulaire() {
     const { register, handleSubmit } = useForm();
     const [preview, setPreview] = useState();
+    const [ fileData, setFileData ] = useState();
     const dispatch = useDispatch();
 
     const onSubmit = (data, e) => {
-        console.log(data.file[0])
         const formData = new FormData();
         formData.append("article", data.article);
-        formData.append("file", data.file[0]);
-        console.log(formData);
-        // console.log(data.file[0].type);
-        dispatch(postArticle(formData, data.file[0].type));
+        formData.append("file", fileData);
+        console.log(fileData.type);
+        dispatch(postArticle(formData, fileData.type));
         e.target.reset();
         setPreview();
     }
 
     const handleFile = e => {
+        setFileData(e.target.files[0]);
         console.log(URL.createObjectURL(e.target.files[0]));
         setPreview(URL.createObjectURL(e.target.files[0]))
     }

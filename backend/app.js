@@ -1,12 +1,21 @@
 import express, { json } from 'express';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import articleRoutes from './routes/article.js';
 import userRoutes from './routes/user.js';
 import commentRoutes from './routes/comment.js';
 import likeRoutes from './routes/like.js';
 import moderatorRoutes from './routes/moderator.js';
-import chatRoutes from './routes/chat.js'
+import chatRoutes from './routes/chat.js';
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+})
+app.use(helmet());
+app.use(limiter)
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -14,7 +23,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(json());
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
 
 app.use('/images', express.static('images'));
 app.use('/api/auth', userRoutes);

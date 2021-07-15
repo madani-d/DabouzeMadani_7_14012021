@@ -5,6 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { updateAvatar } from '../../redux/usersReducer/usersReduser';
+import AvatarCropper from '../AvatarCropper/AvatarCropper';
 
 export default function ProfilCard({ user }) {
     const [updatedAvatar, setUpdatedAvatar] = useState(user.avatar);
@@ -17,18 +18,12 @@ export default function ProfilCard({ user }) {
     console.log(JSON.parse(localStorage.storageToken).userId);
 
     const handleFile = e => {
-        setUpdatedAvatar(URL.createObjectURL(e.target.files[0]));
+        setUpdatedAvatar(e.target.files);
         setAvatarChanged(true);
         console.log(formState);
     }
     
     const onSubmit = data => {
-        console.log(data.avatar);
-        console.log(formState);
-        const formData = new FormData();
-        formData.append('file', data.avatar[0]);
-        formData.append('userId', user.id)
-        dispatch(updateAvatar(formData));
         setAvatarChanged(false)
     }
 
@@ -40,21 +35,32 @@ export default function ProfilCard({ user }) {
                     className="update-avatar-form"
                     onSubmit={handleSubmit(onSubmit)}>
                     <div className="profil-header-avatar light-container">
-                        <img src={updatedAvatar} alt="avatar" />
-                    {avatarChanged && <button type="submit" className="avatar-button avatar-button-send">Envoyer</button>}
+                        {avatarChanged ?
+                            <AvatarCropper avatar={updatedAvatar} userId={user.id}/>
+                        :
+                            <img src={user.avatar} alt="avatar" />
+                        }
                     </div>
-                    <label htmlFor="avatar" className=" light-button avatar-button">
-                        <FontAwesomeIcon
-                            icon={faEdit}
-                            />
-                        Modifier
-                    </label>
+                    {avatarChanged ?
+                        <button
+                            onClick={() => setAvatarChanged(false)}
+                            className=" light-button avatar-button">
+                            Annuler
+                        </button>
+                    :
+                        <label htmlFor="avatar" className=" light-button avatar-button">
+                            <FontAwesomeIcon
+                                icon={faEdit}
+                                />
+                            Modifier
+                        </label>
+                    }
                     <input 
                         className="avatar image"
                         type="file"
                         id="avatar"
                         name="avatar"
-                        accept="image/*"
+                        accept="image/png, image/jpeg"
                         {...register('avatar')}
                         onChange={e => handleFile(e)}
                     />

@@ -52,6 +52,7 @@ export default function Crop() {
         </div>
         <input
             type="file"
+            accept="image/png, image/jpeg"
             onChange={onSelectedFile}
         />
         <button onClick={onDownload}>Download !!</button>

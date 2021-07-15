@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import CommentCard from '../CommentCard/CommentCard';
 import CommentForm from '../CommentForm/CommentForm';
@@ -15,12 +15,13 @@ import './ArticleCard.scss';
 
 export default function ArticleCard(props) {
     const articles = props.articleData;
-    const [showMore, setShowMore] = useState();
     const [option, setOption] = useState(false);
     const [modify, setModify] = useState(false);
     const dispatch = useDispatch();
+    let show = useRef(false)
+    const [showMore, setShowMore] = useState(show);
 
-    console.log(props.me);
+    console.log(props);
     
     const handleLike = (articleId, index, likeValue) => {
         console.log(likeValue);
@@ -36,9 +37,12 @@ export default function ArticleCard(props) {
         setOption(false);
         dispatch(deleteArticle(articleId))
     }
-    // useEffect(() => {
-    //     setShowMore(false);
-    // }, [showMore])
+
+
+    const handleShowMore = () => {
+        setShowMore(!showMore)
+        console.log(showMore);
+    }
 
     return (
         <article className="article-card light-container">
@@ -110,7 +114,7 @@ export default function ArticleCard(props) {
                         </span>
                         <button
                             className="comment-button light-button"
-                            onClick={() => setShowMore(!showMore)}
+                            onClick={() => handleShowMore()}
                         >
                             {articles.comments.length} Commentaires
                         </button>
@@ -119,7 +123,7 @@ export default function ArticleCard(props) {
             }
             {showMore &&
                 articles.comments.map((item, index) => (
-                    <CommentCard commentData={item} index={index} articleId={articles.id} key={uuidv4()} />
+                    <CommentCard commentData={item} index={index} articleId={articles.id} key={uuidv4()}/>
                 ))
             }
             <CommentForm articleId={articles.id}/>
