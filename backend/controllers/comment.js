@@ -32,7 +32,7 @@ export const createComment = (req, res, next) => {
             user_id: res.locals.userId,
             date_post: dateJsToSql(results.date_post),
             texte_commentaire: req.body.comment,
-            commentsLikes: 0,
+            commentLikes: 0,
             liked: false,
             updateComment: true
         }
@@ -50,7 +50,7 @@ export const deleteComment = (req, res, next) => {
 }
 
 export const updateComment = (req, res, next) => {
-    const data = [req.body.comment, req.body.commentId, res.locals.userId]
+    const data = [req.body.texte_commentaire, req.body.commentId, res.locals.userId]
     db.query(sqlUpdateComment, data, (err, result) => {
         if (err) throw err;
         res.status(201).json({ message: "commetaire modifié" })

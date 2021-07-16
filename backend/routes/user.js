@@ -7,7 +7,8 @@ import {
     login,
     restoreConnection,
     getAllUsers,
-    updateAvatar
+    updateAvatar,
+    deleteAccount
 } from '../controllers/user.js';
 import { check, validationResult } from 'express-validator';
 
@@ -24,7 +25,8 @@ router.post('/signin', [
 router.post('/login', login);
 router.get('/restoreConnection', auth, restoreConnection);
 router.get('/getUsers', auth, getAllUsers);
-router.put('/updateAvatar', auth, multer, updateAvatar)
+router.put('/updateAvatar', auth, multer, updateAvatar);
+router.get('/deleteAccount', auth, deleteAccount);
 
 
 export default router;

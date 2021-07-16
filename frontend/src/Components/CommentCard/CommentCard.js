@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 import { likeComment } from '../../redux/articles/articleReducer';
 import OptionsToggle from '../OptionsToggle/OptionsToggle';
+import CommentForm from '../CommentForm/CommentForm';
 import React, { useState } from 'react';
 import { deleteComment, reportComment } from '../../redux/articles/articleReducer';
 import './CommentCard.scss';
@@ -59,7 +60,15 @@ export default function CommentCard(props) {
             }
             {comment.updateComment && <span>Modifier</span> }
             <div className="comment-content">
-                <p className="comment">{comment.texte_commentaire}</p>
+                {modify ? 
+                    <CommentForm
+                        articleId={props.articleId}
+                        texte={comment.texte_commentaire}
+                        commentId={comment.id}
+                    />
+                :
+                    <p className="comment">{comment.texte_commentaire}</p>
+                }
                 <button
                     className="like-button light-button"
                     onClick={() => handleLike(comment.id, props.index, props.articleId, comment.liked)}

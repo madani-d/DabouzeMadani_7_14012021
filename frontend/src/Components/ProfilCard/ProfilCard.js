@@ -4,12 +4,13 @@ import './ProfilCard.scss';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { updateAvatar } from '../../redux/usersReducer/usersReduser';
 import AvatarCropper from '../AvatarCropper/AvatarCropper';
+import DeleteAccount from '../DeleteAccount/DeleteAccount';
 
 export default function ProfilCard({ user }) {
     const [updatedAvatar, setUpdatedAvatar] = useState(user.avatar);
     const [avatarChanged, setAvatarChanged] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const { register, handleSubmit, formState } = useForm();
     const dispatch = useDispatch();
     const date = new Date(user.date_signin);
@@ -73,6 +74,16 @@ export default function ProfilCard({ user }) {
             }
             <h1>{user.completName}</h1>
             <p>Inscrit depuis le {date.toLocaleDateString("fr-FR", options)}</p>
+            {JSON.parse(localStorage.storageToken).userId === user.id &&
+            <>
+                <button onClick={() => setOpenModal(!openModal)}>Supprimer votre compte</button>
+                {openModal && 
+                    <DeleteAccount
+                        setOpenModal={setOpenModal}
+                    />
+                }
+                </>
+            }
         </section>
     )
 }

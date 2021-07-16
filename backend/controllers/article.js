@@ -3,10 +3,6 @@ import dateJsToSql from '../utils/date.js';
 import * as fs  from 'fs';
 import {
     sqlCreateArticle,
-    sqlGetAllArticle,
-    sqlGetComment,
-    sqlGetLikedArticle,
-    sqlGetLikedComment,
     sqlDeleteArticle,
     sqlGetDeleteFilename,
     sqlUpdateArticle,

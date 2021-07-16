@@ -131,3 +131,27 @@ export const updateAvatar = (req, res, next) => {
         }
     )
 }
+
+export const deleteAccount = (req, res) => {
+    const userId = res.locals.userId
+    db.query('CALL delete_account(?)',
+        userId,
+        (err, result) => {
+            // console.log(result[1][0]);
+            const imageToDeleted = [];
+            imageToDeleted.push(result[0][0].avatar)
+            if (result[1].length > 0) {
+                for (const item of result[1]) {
+                    imageToDeleted.push(item.image_url)
+                }
+            }
+            console.log(imageToDeleted);
+            for (const image of imageToDeleted) {
+                const filename = image.split('images/')[1];
+                console.log(filename);
+                fs.unlink(`images/${filename}`, (error => error))
+            }
+            res.status(200).json({message: "compte supprimé avec succés"})
+        }
+    )
+}

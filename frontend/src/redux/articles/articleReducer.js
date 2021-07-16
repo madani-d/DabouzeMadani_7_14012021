@@ -74,8 +74,16 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
                 articles: updateArticlesText
             }
 
-        // case 'UPDATECOMMENT':
-        //     const
+        case 'UPDATECOMMENT':
+            const updateComment = [...state.articles];
+            const { payload, articleId, commentId } = action;
+            const artIndex = updateComment.findIndex(element => element.id === articleId);
+            const commIndex = updateComment[artIndex].comments.findIndex(element => element.id === commentId);
+            updateComment[artIndex].comments[commIndex].texte_commentaire = payload;
+
+            return {
+                articles: updateComment
+            }
 
         case 'DELETEARTICLE':
             const deleteArticle = state.articles.filter(item => item.id !== action.articleId)
@@ -315,6 +323,26 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
             })
         })
     }
+}
+
+export const updateComment = (texte_commentaire, commentId, articleId) => dispatch => {
+    const data = {texte_commentaire, commentId}
+    axios.put(`${process.env.REACT_APP_API_URL}/api/comment/update`,
+        data,
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        }
+    )
+    .then(res => {
+        console.log(res);
+        dispatch({
+            type: 'UPDATECOMMENT',
+            payload: texte_commentaire,
+            articleId,
+            commentId
+        })
+    })
 }
 
 export const reportArticle = articleId => dispatch => {

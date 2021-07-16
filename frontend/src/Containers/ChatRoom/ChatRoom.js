@@ -100,7 +100,11 @@ export default function ChatRoom() {
             <form className="chat-form"
                 onSubmit={e => handleSubmit(e)}>
                 <input type="text"/>
-                <button className="chat-button">envoyer</button>
+                <button
+                    type="submit"
+                    className="chat-button">
+                    envoyer
+                </button>
             </form>
         </>
     )

@@ -60,7 +60,8 @@ function Formulaire() {
                 {...register('file', {required: true})}
                 onChange={(e) => handleFile(e)}/>
             {preview && <img src={preview} alt="preview"  className="preview"/>}
-            <button 
+            <button
+            type="submit"
                 className="form-article-button form-article-send">
                     <FontAwesomeIcon
                         icon={faPaperPlane}
