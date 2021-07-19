@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Cropper from 'react-easy-crop';
 import './AvatarCropper.scss'
-import { generateDownload } from '../ImageCropper/cropImage';
+import { generateDownload } from './cropImage';
 import { useDispatch } from 'react-redux';
 import { updateAvatar } from '../../redux/usersReducer/usersReduser';
 
