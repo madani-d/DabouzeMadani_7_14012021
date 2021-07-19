@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import CommentCard from '../CommentCard/CommentCard';
 import CommentForm from '../CommentForm/CommentForm';
-// import ArticleForm from '../ArticleForm/ArticleForm';
 import ArticleUpdateForm from '../ArticleUpdateForm/ArticleUpdateForm';
 import OptionsToggle from '../OptionsToggle/OptionsToggle';
 import { deleteArticle, likeArticle, reportArticle } from '../../redux/articles/articleReducer';
@@ -15,16 +14,15 @@ import './ArticleCard.scss';
 
 export default function ArticleCard(props) {
     const articles = props.articleData;
-    const [option, setOption] = useState(false);
-    const [modify, setModify] = useState(false);
-    const dispatch = useDispatch();
     let show = useRef(false)
+    const [option, setOption] = useState(false);// When option is true open modal
+    const [modify, setModify] = useState(false);// When modify is true display formArticle
     const [showMore, setShowMore] = useState(show);
+    const dispatch = useDispatch();
 
     console.log(props);
     
     const handleLike = (articleId, index, likeValue) => {
-        console.log(likeValue);
         dispatch(likeArticle(articleId, index, likeValue))
     }
 
@@ -41,7 +39,6 @@ export default function ArticleCard(props) {
 
     const handleShowMore = () => {
         setShowMore(!showMore)
-        console.log(showMore);
     }
 
     return (

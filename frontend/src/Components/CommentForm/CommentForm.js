@@ -11,17 +11,13 @@ export default function CommentForm({ articleId, texte, commentId }) {
     const { register, handleSubmit } = useForm();
     const [comm, setComm] = useState(texte ? texte : "");
     const dispatch = useDispatch();
-    console.log(texte);
 
 
     const onSubmit = (data) => {
-        console.log(data.comment);
-        console.log(articleId);
         dispatch(postComment(articleId, data.comment));
     }
 
     const onUpdateSUbmit = data => {
-        console.log(data);
         dispatch(updateComment(data.comment, commentId, articleId))
     }
 

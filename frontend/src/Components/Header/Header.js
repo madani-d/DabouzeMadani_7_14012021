@@ -8,14 +8,7 @@ import Logo from '../../assets/icon-left-font-monochrome-black.svg';
 import WhiteLogo from '../../assets/icon-left-font-monochrome-white.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComments, faHome, faSearch, faSignOutAlt, faUserShield } from '@fortawesome/free-solid-svg-icons';
-// import { loadChat } from '../../redux/socketReducer/socketReducer';
-// import io from 'socket.io-client';
-// const socket = io.connect(process.env.REACT_APP_API_URL, {path: '/groupomania_chat/'});
-// socket.auth = localStorage.storageToken && { 
-//     token: JSON.parse(localStorage.storageToken).token,
-//     userId: JSON.parse(localStorage.storageToken).userId
-// }
-// socket.connect();
+
 
 export default function Header() {
     const { users } = useSelector(state => ({
@@ -35,6 +28,7 @@ export default function Header() {
     ))
     const dispatch = useDispatch();
     const history = useHistory();
+    // If deconnected redirect to login page
     !connected && history.push('/');
     
     const [ windowWidth, setWindowWidth ] = useState(window.innerWidth);
@@ -42,17 +36,12 @@ export default function Header() {
     const [searchResult, setSearchResult] = useState([]);
     const [modalSearch, setModalSearch] = useState(false);
 
-    // useEffect(() => {
-    //     dispatch(loadChat())
-    // }, [])
-
     useEffect(() => {
         const changeWidth = () => {
             setWindowWidth(window.innerWidth);
         }
         
         window.addEventListener('resize', changeWidth);
-        console.log(windowWidth);
         
         return () => {
             window.removeEventListener('resize', changeWidth);
@@ -67,7 +56,6 @@ export default function Header() {
     
     useEffect(() => {
         window.scrollTo(0, 0);
-        console.log(usersNames);
         const result = usersNames.filter(user =>
             user.completName.includes(searchTerm)
             );

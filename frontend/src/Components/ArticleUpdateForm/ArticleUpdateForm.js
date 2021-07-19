@@ -7,11 +7,9 @@ import { faImages, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from 'react-hook-form';
 
 function ArticleUpdateForm({imageUrl, texteArticle, articleId, index, setModify, modify}) {
-    console.log(imageUrl);
-    const { register, handleSubmit, formState } = useForm();
+    const { register, handleSubmit } = useForm();
     const [updatePreview, setUpdatePreview] = useState();
     const dispatch = useDispatch();
-    console.log(formState);
 
     useEffect(() => {
         setUpdatePreview(imageUrl);
@@ -36,10 +34,7 @@ function ArticleUpdateForm({imageUrl, texteArticle, articleId, index, setModify,
             }
             dispatch(updateArticle(datas, articleId))
         }
-        setModify(!modify)
-        console.log(formState);
-        console.log(data);
-        data.file[0] ? console.log('type') : console.log('pas type');
+        setModify(!modify);
     }
 
     const handleResize = e => {

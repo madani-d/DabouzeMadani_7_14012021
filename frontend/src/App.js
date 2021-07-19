@@ -7,7 +7,7 @@ import Settings from './Containers/Settings/Settings';
 import ChatRoom from './Containers/ChatRoom/ChatRoom';
 import ErrorPage from './Containers/ErrorPage/ErrorPage';
 import { useSelector } from 'react-redux';
-import { RestoreConnection } from './utils/restoreConnection'
+import { restoreConnection } from './redux/connectedReducer/connectedReducer'
 import ReportPage from './Containers/ReportPage/ReportPage';
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
 
 
   if (!connected && localStorage.storageToken) {
-    RestoreConnection()
+    restoreConnection()
   }
 
   return (

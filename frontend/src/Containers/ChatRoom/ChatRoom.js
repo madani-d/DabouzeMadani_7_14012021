@@ -48,8 +48,6 @@ export default function ChatRoom() {
         socket.emit('chat message', e.target[0].value);
     }
 
-    console.log(users);
-
     return (
         <>
             <Header/>

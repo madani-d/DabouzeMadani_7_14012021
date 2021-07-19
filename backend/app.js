@@ -10,10 +10,12 @@ import chatRoutes from './routes/chat.js';
 
 const app = express();
 
+// Initialize limit limit requests (100 by 15min)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100
+  max: 300
 })
+
 app.use(helmet());
 app.use(limiter)
 app.use((req, res, next) => {

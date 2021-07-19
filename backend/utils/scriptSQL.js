@@ -1,3 +1,5 @@
+/*************** PREPARED STATEMENT   **************/
+
 // Connexion
 export const sqlCheckEmail = `
     SELECT COUNT(*) AS present  
@@ -150,6 +152,10 @@ export const sqlGetAllUsers = `
 
 export const sqlUpdateAvatar = `
     CALL update_avatar(?, ?);
+`
+
+export const sqlDeleteAccount = `
+    CALL delete_account(?)
 `
 
 // Report

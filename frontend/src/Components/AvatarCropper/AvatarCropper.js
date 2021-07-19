@@ -5,24 +5,20 @@ import { generateDownload } from '../ImageCropper/cropImage';
 import { useDispatch } from 'react-redux';
 import { updateAvatar } from '../../redux/usersReducer/usersReduser';
 
-export default function AvatarCropper({avatar, userId}) {
+export default function AvatarCropper({avatar, userId, setUpdateAvatar}) {
     const [ crop, setCrop ] = useState({ x: 0, y: 0 });
     const [ zoom, setZoom ] = useState(1);
     const [ croppedArea, setCroppedArea ] = useState(null);
     const [ image, setImage ] = useState(null);
     const [ imageData, setImageData ] = useState(null);
-    const [test, setTest] = useState();
-
     const dispatch = useDispatch();
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-        console.log(croppedArea, croppedAreaPixels);
         setCroppedArea(croppedAreaPixels)
     }, [])
 
     useEffect(() => {
         if (avatar && avatar.length > 0) {
-            console.log(avatar[0]);
             setImageData({ type: avatar[0].type, name: avatar[0].name })
             const reader = new FileReader();
             reader.readAsDataURL(avatar[0]);
@@ -30,6 +26,7 @@ export default function AvatarCropper({avatar, userId}) {
                 setImage(reader.result);
             })
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const onSubmit = () => {
@@ -42,16 +39,15 @@ export default function AvatarCropper({avatar, userId}) {
         })
     }
 
-    console.log(test);
-
     return (
         <>
             <Cropper
-                className="avatar-cropper"
+                // className="avatar-cropper"
                 image={image}
                 crop={crop}
                 zoom={zoom}
                 aspect={1}
+                objectFit='contain'
                 cropShape="round"
                 showGrid={false}
                 onCropChange={setCrop}

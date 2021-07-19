@@ -29,6 +29,7 @@ function Formulaire() {
         setPreview(URL.createObjectURL(e.target.files[0]))
     }
 
+    // Adapte textearea size at the text content
     const handleResize = e => {
         e.target.style.height = e.target.scrollHeight + "px"
     }
@@ -39,8 +40,6 @@ function Formulaire() {
             onSubmit={handleSubmit(onSubmit)}>
             <textarea
                 onInput={e => handleResize(e)}
-                // 'this.style.height = "";this.style.height = this.scrollHeight + "px"'
-                // type="text"
                 aria-label="ajouter un article"
                 placeholder="Quoi de neuf ?"
                 className="form-article-input"

@@ -15,7 +15,6 @@ function connectedReducer(state = INITIALE_CONNECTED_STATE, action) {
                 userId: JSON.parse(localStorage.storageToken).userId
             }
             socket.connect();
-            console.log(socket);
             return {
                 connected: true
             }
@@ -48,7 +47,6 @@ export const connection = data => dispatch => {
                 dispatch({
                     type: 'CONNECT'
                 })
-                // history.push('/home');
             })
             .catch(err => {
                 alert(err.response.data.message);
@@ -74,4 +72,19 @@ export const signup = data => dispatch => {
                 console.log(err.response.data.message);
                 alert(err.response.data.message)
             })
+}
+
+export const restoreConnection = () => dispatch => {
+    axios.get(`${process.env.REACT_APP_API_URL}/api/auth/restoreConnection`,
+        {
+            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
+            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
+        } 
+    )
+    .then(result => {
+        console.log(result);
+        dispatch({
+            type: 'CONNECT'
+            })
+    })
 }

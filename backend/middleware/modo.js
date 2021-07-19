@@ -2,7 +2,7 @@ import { db } from "../connectionDB.js";
 import { sqlModoAuth } from "../utils/scriptSQL.js";
 
 export const modo = (req, res, next) => {
-    console.log('modo');
+    // Check if user is Modo
     db.query(sqlModoAuth,
         res.locals.userId,
         (err, result) => {

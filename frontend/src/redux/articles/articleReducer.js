@@ -7,7 +7,6 @@ const INITIAL_ARTICLE_STATE = {
 function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
     switch(action.type) {
         case 'LOADARTICLES':
-            console.log(action.payload);
             return {
                 articles: action.payload
             }
@@ -30,7 +29,6 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
             }
 
         case 'LIKEARTICLE':
-            console.log(state.articles);
             const likeArticles = [...state.articles];
             const article = likeArticles[action.index];
             article.liked = !article.liked;
@@ -44,7 +42,6 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
             }
 
         case 'LIKECOMMENT':
-            console.log('like');
             const likeComment = [...state.articles];
             const articleIndex = likeComment.findIndex(element => element.id === action.articleId);
             likeComment[articleIndex].comments[action.index].liked = !likeComment[articleIndex].comments[action.index].liked;
@@ -94,18 +91,12 @@ function articleReducer(state = INITIAL_ARTICLE_STATE, action) {
 
         case 'DELETECOMMENT':
             const deleteComment = [...state.articles];
-            console.log(action.articleId);
             for (const article of deleteComment) {
-                console.log("ca passe la?");
                 if (article.id === action.articleId) {
-                    console.log(article.id);
                     article.comments = article.comments.filter(item => item.id !== action.commentId)
-                    console.log(article.comments);
                     break
                 }
             }
-            console.log("c'est ici !!!!!");
-            console.log(deleteComment);
 
             return {
                 articles: deleteComment
@@ -128,8 +119,6 @@ export const getArticles = () => dispatch => {
         }
     )
     .then(res => {
-        console.log(res);
-        console.log(res.data);
         dispatch({
             type: 'LOADARTICLES',
             payload: res.data
@@ -168,8 +157,6 @@ export const postComment = (articleId, comment) => dispatch => {
         }
     )
     .then(res => {
-        console.log(res);
-        console.log(res.data);
         dispatch({
             type: 'POSTCOMMENT',
             payload: res.data,
@@ -180,7 +167,6 @@ export const postComment = (articleId, comment) => dispatch => {
 
 
 export const likeArticle = (articleId, index, likeValue) => dispatch => {
-    console.log(articleId);
     if (likeValue) {
         axios.post(`${process.env.REACT_APP_API_URL}/api/unlikeArticle`,
             {articleId},
@@ -190,7 +176,6 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
             }
         )
         .then(res => {
-            console.log(res);
             dispatch({
                 type: 'LIKEARTICLE',
                 index: index
@@ -205,7 +190,6 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
             }
         )
         .then(res => {
-            console.log(res);
             dispatch({
                 type: 'LIKEARTICLE',
                 index: index
@@ -215,7 +199,6 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
 };
 
 export const likeComment = (commentId, index, articleId, likeValue) => dispatch => {
-    console.log(articleId);
     if (likeValue) {
         axios.post(`${process.env.REACT_APP_API_URL}/api/likeComment`,
             {commentId},
@@ -225,7 +208,6 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
             }
         )
         .then(res => {
-            console.log(res);
             dispatch({
                 type: 'LIKECOMMENT',
                 index: index,
@@ -241,7 +223,6 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
             }
         )
         .then(res => {
-            console.log(res);
             dispatch({
                 type: 'LIKECOMMENT',
                 index: index,
@@ -259,7 +240,6 @@ export const deleteArticle = articleId  => dispatch => {
         data: { articleId }
     })
     .then(res => {
-        console.log(res);
         dispatch({
             type: 'DELETEARTICLE',
             articleId: articleId
@@ -277,7 +257,6 @@ export const deleteComment = (commentId, articleId) => dispatch => {
         }
     )
     .then(res => {
-        console.log(res);
         dispatch({
             type: 'DELETECOMMENT',
             commentId: commentId,
@@ -299,7 +278,6 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
             }
         )
         .then(res => {
-            console.log(res.data);
             dispatch({
                 type: 'UPDATEARTICLE',
                 payload: res.data,
@@ -315,7 +293,6 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
             }
         )
         .then(res => {
-            console.log(res.data);
             dispatch({
                 type: 'UPDATEARTICLETEXT',
                 payload: res.data,
@@ -335,7 +312,6 @@ export const updateComment = (texte_commentaire, commentId, articleId) => dispat
         }
     )
     .then(res => {
-        console.log(res);
         dispatch({
             type: 'UPDATECOMMENT',
             payload: texte_commentaire,

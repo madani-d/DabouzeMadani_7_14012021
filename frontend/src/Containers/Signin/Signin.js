@@ -17,9 +17,7 @@ function Signin({  setUserId, setToken, setIsLogin }) {
     const history = useHistory();
 
     const handleBlur = e => {
-        console.log(e);
         if(e.value === "") {
-            console.log('vide');
             e.placeholder = "Champ obligatoire";
             e.required = true;
         }
@@ -36,9 +34,6 @@ function Signin({  setUserId, setToken, setIsLogin }) {
     }
 
     const onSubmit = data => {
-        console.log(data);
-    
-        console.log(data.password);
         axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signin`,
         { nom: data.nom, prenom: data.prenom, email: data.email, password: data.password })// Post with each form element value
         
@@ -52,9 +47,7 @@ function Signin({  setUserId, setToken, setIsLogin }) {
                 history.push('/home');
             })
             .catch(err => {
-                console.log(err.response.data);
                 const error = err.response.data.errors.map(item => item.msg)
-                console.log(error);
                 setErrorMessage(error)
             })
     };

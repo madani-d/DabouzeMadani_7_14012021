@@ -15,14 +15,15 @@ export const createComment = (req, res, next) => {
     let comment = [
         res.locals.userId,
         req.body.articleId,
-        // `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         dateJsToSql(date),
         req.body.comment,
     ]
 
+    // Use stocked procedure
+    // Insert comment in Mysql db
+    // Then get all data comment and send it to front
     db.query(sqlCreateComment, comment, (err, result) => {
         if (err) throw err;
-        console.log(result[0][0].id);
         const results = result[0][0];
         const newComment = {
             id: results.id,
@@ -41,15 +42,16 @@ export const createComment = (req, res, next) => {
 };
 
 export const deleteComment = (req, res, next) => {
+    // Delete comment
     const data = [req.body.commentId, res.locals.userId]
     db.query(sqlDeleteComment, data, (err, result) => {
         if (err) throw err;
-        console.log('supprimé');
         res.status(200).json({ message: "commentaire supprimé" })
     })
 }
 
 export const updateComment = (req, res, next) => {
+    // Update comment
     const data = [req.body.texte_commentaire, req.body.commentId, res.locals.userId]
     db.query(sqlUpdateComment, data, (err, result) => {
         if (err) throw err;
@@ -59,12 +61,14 @@ export const updateComment = (req, res, next) => {
 
 export const reportComment = (req, res, next) => {
     const data = [res.locals.userId, req.body.commentId]
+    // Check if user aleady reported this comment
     db.query(sqlCheckCommentReported,
         data,
         (err, result) => {
             if (result[0]) {
                 res.status(200).json({ message: "déja signalé" })
             } else {
+                // If not report comment
                 db.query(sqlReportComment, data, (err, result) => {
                     if (err) throw err;
                     res.status(201).json({ message: "commentaire signalé" })

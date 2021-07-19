@@ -1,3 +1,5 @@
+// Convert date js to Mysql Datetime
+
 export default function dateJsToSql(date) {// Convert Date to DATETIME SQL
     return date.getUTCFullYear() + '-' +
     ('00' + (date.getMonth() + 1)).slice(-2) + '-' +

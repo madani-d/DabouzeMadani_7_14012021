@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle, faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function OptionsToggle(props) {
-    console.log(props.itemId);
-    console.log(props.articleId);
 
     return (
             <div className="options-card light-container">

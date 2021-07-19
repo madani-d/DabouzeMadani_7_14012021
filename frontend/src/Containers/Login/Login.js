@@ -22,7 +22,6 @@ function Login() {
             { email: data.email,password: data.password })
 
             .then(res => {        
-                console.log(res);
                 const storageToken = {
                     "userId": res.data.userId,
                     "token": res.data.token,
@@ -33,8 +32,7 @@ function Login() {
                 history.push('/home');
             })
             .catch(err => {
-                console.log(err.response.data.message);
-                setErrorMessage(err.response.data.message);
+                setErrorMessage(err.response);
             })
     };
 

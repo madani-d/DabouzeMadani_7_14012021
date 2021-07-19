@@ -3,6 +3,7 @@ import dateJsToSql from "../utils/date.js";
 import { sqlLoadChat } from "../utils/scriptSQL.js";
 
 export const loadChat = (req, res) => {
+    // Get all chat message
     db.query(sqlLoadChat,
         (err, result) => {
             if (err) throw err;

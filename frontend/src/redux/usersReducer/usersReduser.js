@@ -7,11 +7,7 @@ const INITIAL_USERS_STATE = {
 function usersReducer(state = INITIAL_USERS_STATE, action) {
     switch(action.type) {
         case 'LOADUSERS':
-            console.log(action.payload);
-            const users = action.payload;
-            const userId = JSON.parse(localStorage.storageToken).userId
-            const user = users.find(item => item.id === userId)
-            console.log(user);
+
             return {
                 users: action.payload
             }
@@ -37,7 +33,6 @@ export const getUsers = () => dispatch => {
             type: 'LOADUSERS',
             payload: res.data.result
         })
-        console.log(res.data.result);
     })
 }
 

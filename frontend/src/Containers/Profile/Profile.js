@@ -17,11 +17,6 @@ export default function Profile() {
     const userProfile = location.pathname.slice(9).split("-");
     const userId = parseInt(userProfile[2]);
 
-    // const user = useSelector(state =>
-    //     state.usersReducer.filter(user => user.id === userId)
-    // )
-
-    // console.log(user);
 
     const { users } = useSelector(state => ({
         ...state.usersReducer
@@ -33,11 +28,6 @@ export default function Profile() {
     }, [])
 
     const user = users.find(element => element.id === userId)
-    console.log(user);
-
-    console.log(articles);
-    console.log(location.pathname);
-    console.log(userId);
 
     return (
         <>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getArticles } from '../../redux/articles/articleReducer';
 import { getUsers } from '../../redux/usersReducer/usersReduser';
@@ -17,45 +16,18 @@ export default function Home() {
     const { articles } = useSelector(state => ({
         ...state.articleReducer
     }))
-
-    const { users } = useSelector(state => state.usersReducer)
-
-    const { connected } = useSelector(state => ({
-        ...state.connectedReducer
-    }))
-    console.log(connected);
-    console.log(articles);
     const dispatch = useDispatch();
-    const history = useHistory();
-    !connected && history.push('/');
-
 
     useEffect(() => {
+        // Get Articles and users
         dispatch(getArticles());
         dispatch(getUsers());
+        // Check if user is moderator
+        // If moderator load reported posts
         if (JSON.parse(localStorage.storageToken).userRole === 'Moderator') {
             dispatch(loadReports());
         }
-    }, [dispatch])
-
-
-    // users[0] &&
-    //     
-    //     console.log(users);
-
-
-
-
-    console.log(users);
-    // const handleDeconnection = () => {
-    //     localStorage.removeItem("storageToken");
-    //     dispatch({
-    //         type: 'DISCONNECT'
-    //     })
-    //     history.push('/');
-    // }
-
-    // const mostLiked = articles.sort((a, b) => b.articleLikes - a.articleLikes).slice(0, 5);
+    }, [dispatch]);
 
     return (
         <>

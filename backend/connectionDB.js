@@ -1,6 +1,6 @@
 import { createConnection } from 'mysql';
 
-// Create connection 
+// Create connection with Mysql db
 const db = createConnection({
     host: 'localhost',
     user: 'betatesteur',

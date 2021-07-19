@@ -7,7 +7,6 @@ export default function DeleteAccount({ setOpenModal }) {
     const history = useHistory();
 
     const handleDeleteAccount = () => {
-        console.log('test');
         axios(`${process.env.REACT_APP_API_URL}/api/auth/deleteAccount`,
         {
             params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
@@ -15,7 +14,6 @@ export default function DeleteAccount({ setOpenModal }) {
         }
     )
     .then(res => {
-        console.log(res);
         history.push('/signin')
     })
     }

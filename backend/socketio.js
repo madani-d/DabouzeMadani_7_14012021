@@ -5,10 +5,10 @@ import { sqlAuthToken, sqlChatUserData, sqlInsertMessageChat } from "./utils/scr
 import dateJsToSql from './utils/date.js';
 
 
+/****************   Chat working with socket.io     *******************/
 
 
 export const socketIO = (server) => {
-
     const io = new Server(server, {
         cors: {
             origin: "*"
@@ -17,11 +17,14 @@ export const socketIO = (server) => {
             '/groupomania_chat/'
 
     });
-    const users = []
+
+    /********* array users stock connected users ********/
+    const users = [];
     io.on('connection', socket => {
-        console.log('connexion');
+        // add user id and token to socket
         const { userId, token } = socket.handshake.auth
         if (userId && token) {
+            // Authentification connection
             db.query(sqlAuthToken,
                 [userId],
                 (err, result) => {
@@ -35,41 +38,45 @@ export const socketIO = (server) => {
                     }
                 }
             )
+            // Get some data for user connected
             db.query(sqlChatUserData,
                 [userId],
                 (err, result) => {
                     if (err) throw err;
-                    // console.log(result);
                     const userData = {
                         prenom: result[0].prenom,
                         nom: result[0].nom,
                         avatar: result[0].avatar,
                         id: userId
                     }
-                    // console.log(userData);
                     socket.username = userData;
+                    // Search if user already connected
                     if (users.findIndex(user => user.id === userData.id) === -1) {
                         users.push(userData);
                     } else {
                         console.log('user deja connecté');
                     }
+                    // Send new user connected to all users already connected 
                     io.emit('user connected', users)
                 }
             )
 
         } else {
+            // if receive no id and token at connection, disconnect socket
             socket.disconnect();
         }
         socket.on('deconnexion', res => {
+            // At deconnection find user in array of users connected and remove it
             const index = users.findIndex(user => user.id === res);
             users.splice(index, 1);
             io.emit('user connected', users)
+            // Send to all users connected updated array of users connected
             socket.on('disconnect', socket => {
                 console.log('deconnection');
             })
         })
         socket.on('chat message', message => {
-        // console.log(socket.handshake.auth.userId);
+            // When received chat message
             const date = new Date()
             const datePost = dateJsToSql(date)
             const data = [
@@ -77,10 +84,12 @@ export const socketIO = (server) => {
                 message,
                 datePost
             ]
+            // Save message in mysql db
             db.query(sqlInsertMessageChat,
                 data,
                 (err, result) => {
                     if (err) throw err
+                    // When it's done send the message to all users
                     io.emit('chat message', {user: {...socket.username}, message, datePost})
                 }
             )

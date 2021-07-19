@@ -9,12 +9,14 @@ import {
     sqlSignin,
     sqllogin,
     sqlGetAllUsers,
-    sqlUpdateAvatar
+    sqlUpdateAvatar,
+    sqlDeleteAccount
 } from '../utils/scriptSQL.js';
 import { validationResult } from 'express-validator';
 
 
 export const signin = (req, res, next) => {
+    // If error from express validator send error message to the front 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
@@ -40,14 +42,17 @@ export const signin = (req, res, next) => {
                 req.body.email,
                 dateJsToSql(date),
                 hash,)
+                // Create a uuid from name and date time signin
             const namespace = `1b671a64-40d5-491e-99b0-da01ff1f3341`;
             const id = `${user[0]}${user[3]}`;
             const uuid = uuidv5(id, namespace);
             user.push(uuid);
 
-            db.query(sqlSignin, user, (err, result) => {// Create User in DB
+            db.query(sqlSignin, user, (err, result) => {
+                // Insert User in DB
                 if (err) throw err;
-                res.status(200).json({// Create and send token
+                res.status(200).json({
+                    // Create and send token
                     userId: result.insertId,
                     token: jwt.sign(
                     {userUuid: uuid},
@@ -67,23 +72,29 @@ export const login = (req, res, next) => {
     db.query(
         sqlCheckEmail,
         req.body.email,
-        (err, result) => {// Check is email already exist in DB
+        (err, result) => {
+            // Check is email already exist in DB
             if (err) throw err;
-            if (!result[0].present) {// If not 
+            if (!result[0].present) {
+                // If not 
                 return res.status(401).json({ message: "Utilisateur non trouvé." });
-            }// If yes
+            }
+            // If yes continue
 
             db.query(
                 sqllogin,
                 req.body.email,
-                (err, result) => {// Recover password and id
+                (err, result) => {
+                    // Recover password and id
                 if (err) throw err;
-                bcrypt.compare(req.body.password, result[0].mdp)// Compare Emails
+                bcrypt.compare(req.body.password, result[0].mdp)
+                // Compare Emails
                     .then(valid => {
                         if (!valid) {
                             return res.status(401).json({ message: 'Mot de passe incorrect.' })
                         }
-                        res.status(200).json({// Create and send Token
+                        res.status(200).json({
+                            // Create and send Token
                             userId: result[0].id,
                             userRole: result[0].role === 'M' ? 'Moderator' : 'User',
                             token: jwt.sign(
@@ -99,10 +110,12 @@ export const login = (req, res, next) => {
 };
 
 export const restoreConnection = (req, res, next) => {
+    // If auth ok restore connection 
     res.status(200).json({ message: 'Reconnexion réussie'})
 }
 
 export const getAllUsers = (req, res, next) => {
+    // Get all users 
     db.query(
         sqlGetAllUsers,
         (err, result) => {
@@ -120,6 +133,9 @@ export const updateAvatar = (req, res, next) => {
     ];
     console.log(data);
     console.log(req.body);
+    // Use Stored procedure
+    // First time recover avatar name to remove it
+    // Then replace by new avatar and send it to the front
     db.query(
         sqlUpdateAvatar,
         data,
@@ -134,10 +150,12 @@ export const updateAvatar = (req, res, next) => {
 
 export const deleteAccount = (req, res) => {
     const userId = res.locals.userId
-    db.query('CALL delete_account(?)',
+    // Use stocked procedure
+    // First time recover all file name (avatar and post picture) to delete them
+    // Then delete the user and all post, comment and chat message (ON DELETE CASCADE)
+    db.query(sqlDeleteAccount,
         userId,
         (err, result) => {
-            // console.log(result[1][0]);
             const imageToDeleted = [];
             imageToDeleted.push(result[0][0].avatar)
             if (result[1].length > 0) {

@@ -26,7 +26,6 @@ export default function ReportPage() {
         dispatch(deleteCommentReported(commentId))
     }
 
-    console.log(reported);
     return (
         <>
             <Header/>

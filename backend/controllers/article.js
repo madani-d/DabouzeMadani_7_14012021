@@ -15,7 +15,6 @@ import {
 // Create Article
 
 export const createArticle = (req, res, next) => {
-    console.log(req.body);
     const date = new Date()
     let article = [
         res.locals.userId,
@@ -24,8 +23,9 @@ export const createArticle = (req, res, next) => {
         dateJsToSql(date),
     ]
 
-    console.log(article);
-    console.log("rêquete reçu");
+    // Use stocked procedure
+    // Send data to Mysql db
+    //Then recover all data of the article and send to the front 
     db.query(sqlCreateArticle, article, (err, result) => {
         if (err) res.status(500).json({error: "erreur serveur"});
         const article = result[0][0];
@@ -50,7 +50,6 @@ export const createArticle = (req, res, next) => {
 // Get all articles
 
 export const getArticles = (req, res, next) => {
-    console.log(res.params);
     const userId = parseInt(res.locals.userId);
     db.query(sqlGetArticles, [userId, userId], (err, result) => {
         if (err) res.status(500).json({error: "erreur serveur"});
@@ -96,22 +95,18 @@ export const getArticles = (req, res, next) => {
 export const deleteArticle = (req, res, next) => {
     console.log(req.body);
     const data = [req.body.articleId, res.locals.userId]
-    try {
-        
-        db.query(sqlGetDeleteFilename, data, (err, result) => {
-            if (err) res.status(500).json({error: "erreur serveur"});
-            console.log(result);
-            const filename = result[0].image_url.split('images/')[1]
-            fs.unlink(`images/${filename}`, (error => error));
-        })
-        
-        db.query(sqlDeleteArticle, data, (err, result) => {
-            if (err) res.status(500).json({error: "erreur serveur"});
-            res.status(201).json({ message: "article supprimé" })
-        })
-    } catch {
-        res.status(200).json({ message: "exception gérée" })
-    }
+    // Recover file name to delete it
+    db.query(sqlGetDeleteFilename, data, (err, result) => {
+        if (err) res.status(500).json({error: "erreur serveur"});
+        const filename = result[0].image_url.split('images/')[1]
+        fs.unlink(`images/${filename}`, (error => error));
+    })
+
+    // And delete Article
+    db.query(sqlDeleteArticle, data, (err, result) => {
+        if (err) res.status(500).json({error: "erreur serveur"});
+        res.status(201).json({ message: "article supprimé" })
+    })
 };
 
 export const updateArticle = (req, res, next) => {
@@ -121,6 +116,10 @@ export const updateArticle = (req, res, next) => {
         req.body.articleId,
         res.locals.userId,
     ]
+
+    // Use Use Stocked procedure
+    // Get file name and delete it
+    // Then udate article
     db.query(sqlUpdateArticle, data, (err, result) => {
         if (err) res.status(500).json({error: "erreur serveur"});
         const filename = result[0][0].image_url.split('images/')[1];
@@ -129,13 +128,12 @@ export const updateArticle = (req, res, next) => {
             image_url: result[1][0].image_url,
             article: data[1]
         }
-        console.log(response);
         res.status(201).json(response)
     })
 }
 
 export const updateArticleText = (req, res, next) => {
-    console.log(req.body);
+    // Update only article text
     const data = [
         req.body.article,
         req.body.articleId,
@@ -148,17 +146,16 @@ export const updateArticleText = (req, res, next) => {
 }
 
 export const reportArticle = (req, res, next) => {
-    console.log(req.body);
     const data = [res.locals.userId, req.body.articleId]
+    // Check if user already report this article
     db.query(sqlCheckArticleReported,
         data,
         (err, result) => {
             if (err) res.status(500).json({error: "erreur serveur"});
             if (result[0]) {
-                console.log('deja signalé');
                 res.status(200).json({ message: "déja signalé" })
             } else {
-                console.log('pas encore signalé');
+                // If not already reported by user do it
                 db.query(sqlReportArticle, data, (err, result) => {
                     if (err) res.status(500).json({error: "erreur serveur"});
                     res.status(200).json({ message: "article signalé" })

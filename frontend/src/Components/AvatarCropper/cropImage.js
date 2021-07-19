@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const createImage = url => 
     new Promise((resolve, reject) => {
         const image = new Image();
@@ -46,23 +44,6 @@ export default async function getCroppedImg(imageSrc, pixelCrop, rotation=0) {
     return canvas;
 }
 
-const sendAvatar = (data) => {
-    console.log(data);
-    const formData = new FormData();
-        formData.append('file', data);
-        formData.append('userId', 105)
-        axios.put(`${process.env.REACT_APP_API_URL}/api/auth/updateAvatar`,
-        formData,
-        {
-            params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
-            headers : { "authorization": "Bearer " + JSON.parse(localStorage.storageToken).token }
-        } 
-    )
-    .then(res => {
-        console.log(res);
-    })
-}
-
 export const generateDownload = async (imageSrc, crop, imageData) => {
     if (!crop || ! imageSrc) {
         return;
@@ -83,23 +64,7 @@ export const generateDownload = async (imageSrc, crop, imageData) => {
         
         return new File([u8arr], filename, {type:mime});
     }
-    // console.log(canvas.toDataURL());
     const test = dataURLtoFile(canvas.toDataURL(), name, type);
-    // sendAvatar(test);
     console.log(test);
     return test;
-
-    // canvas.toBlob(
-    //     blob => {
-    //         const previewUrl = window.URL.createObjectURL(blob);
-
-    //         const anchor = document.createElement("a");
-    //         anchor.download = "image.jpeg";
-    //         anchor.href = URL.createObjectURL(blob);
-    //         // anchor.click(sendAvatar(anchor));
-    //         window.URL.revokeObjectURL(previewUrl);
-    //     },
-    //     "image/jpeg",
-    //     0.66
-    // );
 };

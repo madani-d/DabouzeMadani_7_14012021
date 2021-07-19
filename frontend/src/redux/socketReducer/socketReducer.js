@@ -20,7 +20,6 @@ function socketReducer(state = INITIAL_SOCKET_STATE, action) {
 export default socketReducer;
 
 export const loadChat = () => dispatch => {
-    console.log('charge');
     axios(`${process.env.REACT_APP_API_URL}/api/chat/loadMessages`,
         {
             params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },
@@ -28,7 +27,6 @@ export const loadChat = () => dispatch => {
         }
     )
     .then(res => {
-        console.log(res.data);
         dispatch({
             type: 'LOADCHAT',
             payload: res.data
