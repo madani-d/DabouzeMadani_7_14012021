@@ -85,7 +85,7 @@ CREATE TABLE Chat (
 ) ENGINE=InnoDB;
 
 DROP PROCEDURE IF EXISTS create_article;
-CREATE DEFINER=`betatesteur`@`localhost` PROCEDURE `create_article`(p_user_id smallint, p_image_url varchar(100), p_texte_article text, p_date_post datetime)
+CREATE PROCEDURE `create_article`(p_user_id smallint, p_image_url varchar(100), p_texte_article text, p_date_post datetime)
 begin
 insert into Article (user_id, image_url, texte_article, date_post)
 values (p_user_id, p_image_url, p_texte_article, p_date_post);
@@ -98,11 +98,11 @@ Article.date_post = p_date_post ;
 end
 
 DROP PROCEDURE IF EXISTS create_commentaire;
-CREATE DEFINER=`betatesteur`@`localhost` PROCEDURE `create_commentaire`(p_user_id smallint, p_article_id smallint, p_date_post datetime, p_texte_commentaire text)
+CREATE PROCEDURE `create_commentaire`(p_user_id smallint, p_article_id smallint, p_date_post datetime, p_texte_commentaire text)
 begin  insert into Commentaire (user_id, article_id, date_post, texte_commentaire) values (p_user_id, p_article_id, p_date_post, p_texte_commentaire); select Commentaire.id, Commentaire.date_post, User.avatar, User.prenom, User.nom from Commentaire inner join User on User.id = Commentaire.user_id where user_id = p_user_id and article_id = p_article_id and  date_post = p_date_post and texte_commentaire = p_texte_commentaire ; end
 
 DROP PROCEDURE IF EXISTS delete_account;
-CREATE DEFINER=`betatesteur`@`localhost` PROCEDURE `delete_account`(p_user_id smallint)
+CREATE PROCEDURE `delete_account`(p_user_id smallint)
 begin
 select avatar from User where id = p_user_id;
 select image_url from Article where user_id = p_user_id;
@@ -110,17 +110,17 @@ delete from User where id = p_user_id;
 end
 
 DROP PROCEDURE IF EXISTS delete_reported_article;
-CREATE DEFINER=`betatesteur`@`localhost` PROCEDURE `delete_reported_article`(p_article_id smallint)
+CREATE PROCEDURE `delete_reported_article`(p_article_id smallint)
 begin select image_url from Article where id = p_article_id;
 delete from Article where id = p_article_id;
 end
 
 DROP PROCEDURE IF EXISTS get_reports;
-CREATE DEFINER=`betatesteur`@`localhost` PROCEDURE `get_reports`()
+CREATE PROCEDURE `get_reports`()
 begin select Article.id, Article.texte_article, Article.image_url, Article.user_id, User.avatar, User.prenom, User.nom from Article inner join User on User.id = Article.user_id inner join Report on Article.id = Report.article_id; select Commentaire.id, Commentaire.texte_commentaire, Commentaire.user_id, User.avatar, User.prenom, User.nom from Commentaire inner join User on User.id = Commentaire.user_id inner join Report on Commentaire.id = Report.commentaire_id; end
 
 DROP PROCEDURE IF EXISTS update_article;
-CREATE DEFINER=`betatesteur`@`localhost` PROCEDURE `update_article`(p_image_url varchar(100), p_texte_article text, p_article_id smallint, p_user_id smallint)
+CREATE PROCEDURE `update_article`(p_image_url varchar(100), p_texte_article text, p_article_id smallint, p_user_id smallint)
 begin
 select image_url from Article where id = p_article_id and user_id = p_user_id;
 update Article set image_url = p_image_url, texte_article = p_texte_article where id = p_article_id and user_id = p_user_id;
@@ -128,7 +128,7 @@ select image_url from Article where id = p_article_id and user_id = p_user_id;
 end
 
 DROP PROCEDURE IF EXISTS update_avatar;
-CREATE DEFINER=`betatesteur`@`localhost` PROCEDURE `update_avatar`(p_user_id smallint, p_avatar varchar(100))
+CREATE PROCEDURE `update_avatar`(p_user_id smallint, p_avatar varchar(100))
 begin
 select avatar from User where id = p_user_id;
 update User set avatar = p_avatar where id = p_user_id;
