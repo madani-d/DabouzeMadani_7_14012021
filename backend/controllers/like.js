@@ -16,7 +16,7 @@ export const createLikeArticle = (req, res, next) => {
         sqlLikeArticle,
         likeArticleData,
         (err, result) => {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             console.log(result);
             res.status(200).json({ message: "Like ajouté!" })
         })
@@ -32,7 +32,7 @@ export const removeLikeArticle = (req, res, next) => {
         sqlRemoveLikedArticle,
         removeLikeData,
         (err, result)=> {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             res.status(201).json({ message: "like supprimé" })
         }
     )
@@ -48,7 +48,7 @@ export const createLikeComment = (req, res, next) => {
         sqlLikeComments,
         likeArticleData,
         (err, result) => {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             console.log(result);
             res.status(200).json({ message: "Like ajouté!" })
         })
@@ -64,7 +64,7 @@ export const removeLikeComment = (req, res, next) => {
         sqlRemoveLikedComment,
         removeLikeData,
         (err, result)=> {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             res.status(201).json({ message: "like supprimé" })
         }
     )

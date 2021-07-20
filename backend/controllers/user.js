@@ -28,7 +28,7 @@ export const signin = (req, res, next) => {
         req.body.email,
         (err, result) => {
 
-        if (err) throw err;
+        if (err) res.status(500).json({error: "erreur serveur"});
 
         if (result[0].present > 0) {// Check if email already exist or not in DB
             return res.status(401).json({ message: 'Email deja utilisé!' });
@@ -50,7 +50,7 @@ export const signin = (req, res, next) => {
 
             db.query(sqlSignin, user, (err, result) => {
                 // Insert User in DB
-                if (err) throw err;
+                if (err) res.status(500).json({error: "erreur serveur"});
                 res.status(200).json({
                     // Create and send token
                     userId: result.insertId,
@@ -74,7 +74,7 @@ export const login = (req, res, next) => {
         req.body.email,
         (err, result) => {
             // Check is email already exist in DB
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             if (!result[0].present) {
                 // If not 
                 return res.status(401).json({ message: "Utilisateur non trouvé." });
@@ -86,7 +86,7 @@ export const login = (req, res, next) => {
                 req.body.email,
                 (err, result) => {
                     // Recover password and id
-                if (err) throw err;
+                if (err) res.status(500).json({error: "erreur serveur"});
                 bcrypt.compare(req.body.password, result[0].mdp)
                 // Compare Emails
                     .then(valid => {
@@ -119,7 +119,7 @@ export const getAllUsers = (req, res, next) => {
     db.query(
         sqlGetAllUsers,
         (err, result) => {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             res.status(200).json({ result })
         }
     )

@@ -21,7 +21,6 @@ function usersReducer(state = INITIAL_USERS_STATE, action) {
 export default usersReducer;
 
 export const getUsers = () => dispatch => {
-    console.log('chargement users');
     axios(`${process.env.REACT_APP_API_URL}/api/auth/getUsers`,
         {
             params: { ID: parseInt(JSON.parse(localStorage.storageToken).userId) },

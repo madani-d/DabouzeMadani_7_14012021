@@ -23,7 +23,7 @@ export const createComment = (req, res, next) => {
     // Insert comment in Mysql db
     // Then get all data comment and send it to front
     db.query(sqlCreateComment, comment, (err, result) => {
-        if (err) throw err;
+        if (err) res.status(500).json({error: "erreur serveur"});
         const results = result[0][0];
         const newComment = {
             id: results.id,
@@ -45,7 +45,7 @@ export const deleteComment = (req, res, next) => {
     // Delete comment
     const data = [req.body.commentId, res.locals.userId]
     db.query(sqlDeleteComment, data, (err, result) => {
-        if (err) throw err;
+        if (err) res.status(500).json({error: "erreur serveur"});
         res.status(200).json({ message: "commentaire supprimé" })
     })
 }
@@ -54,7 +54,7 @@ export const updateComment = (req, res, next) => {
     // Update comment
     const data = [req.body.texte_commentaire, req.body.commentId, res.locals.userId]
     db.query(sqlUpdateComment, data, (err, result) => {
-        if (err) throw err;
+        if (err) res.status(500).json({error: "erreur serveur"});
         res.status(201).json({ message: "commetaire modifié" })
     })
 } 
@@ -65,12 +65,13 @@ export const reportComment = (req, res, next) => {
     db.query(sqlCheckCommentReported,
         data,
         (err, result) => {
+            if (err) res.status(500).json({error: "erreur serveur"});
             if (result[0]) {
                 res.status(200).json({ message: "déja signalé" })
             } else {
                 // If not report comment
                 db.query(sqlReportComment, data, (err, result) => {
-                    if (err) throw err;
+                    if (err) res.status(500).json({error: "erreur serveur"});
                     res.status(201).json({ message: "commentaire signalé" })
                 })
             }

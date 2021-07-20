@@ -125,7 +125,7 @@ export const getArticles = () => dispatch => {
         })
     })
 
-    .catch(err => console.log(err.response.data.error.message))
+    .catch(err => alert(err.response.data.error.message))
 }
 
 export const postArticle = (data, fileType) => dispatch =>{
@@ -146,6 +146,7 @@ export const postArticle = (data, fileType) => dispatch =>{
                 payload: res.data
             })
         })
+    .catch(err => alert(err.response.data.error.message))
 }
 
 export const postComment = (articleId, comment) => dispatch => {
@@ -163,6 +164,7 @@ export const postComment = (articleId, comment) => dispatch => {
             articleId: articleId
         })
     })
+    .catch(err => alert(err.response.data.error.message))
 }
 
 
@@ -181,6 +183,8 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
                 index: index
                 })
             })
+    .catch(err => alert(err.response.data.error.message))
+
     } else {
         axios.post(`${process.env.REACT_APP_API_URL}/api/likeArticle`,
             {articleId},
@@ -195,6 +199,7 @@ export const likeArticle = (articleId, index, likeValue) => dispatch => {
                 index: index
                 })
             })
+        .catch(err => alert(err.response.data.error.message))
     }
 };
 
@@ -214,6 +219,8 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
                 articleId: articleId
             });
         })
+    .catch(err => alert(err.response.data.error.message))
+
     } else {
         axios.post(`${process.env.REACT_APP_API_URL}/api/unlikeComment`,
             {commentId},
@@ -229,6 +236,7 @@ export const likeComment = (commentId, index, articleId, likeValue) => dispatch 
                 articleId: articleId
             });
         })
+        .catch(err => alert(err.response.data.error.message))
     }
 };
 
@@ -245,7 +253,7 @@ export const deleteArticle = articleId  => dispatch => {
             articleId: articleId
         })
     })
-    .catch(error => console.log(error))
+    .catch(err => alert(err.response.data.error.message))
 }
 
 export const deleteComment = (commentId, articleId) => dispatch => {
@@ -263,6 +271,7 @@ export const deleteComment = (commentId, articleId) => dispatch => {
             articleId: articleId
         })
     })
+    .catch(err => alert(err.response.data.error.message))
 }
 
 export const updateArticle = (data, articleId, fileType) => dispatch => {
@@ -284,6 +293,7 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
                 articleId: articleId
             })
         })
+        .catch(err => alert(err.response.data.error.message))
     } else {
         axios.put(`${process.env.REACT_APP_API_URL}/api/article/updateText`, 
             data,
@@ -299,6 +309,7 @@ export const updateArticle = (data, articleId, fileType) => dispatch => {
                 articleId: articleId
             })
         })
+        .catch(err => alert(err.response.data.error.message))
     }
 }
 
@@ -319,6 +330,7 @@ export const updateComment = (texte_commentaire, commentId, articleId) => dispat
             commentId
         })
     })
+    .catch(err => alert(err.response.data.error.message))
 }
 
 export const reportArticle = articleId => dispatch => {
@@ -332,6 +344,7 @@ export const reportArticle = articleId => dispatch => {
     .then(res => {
         res.data.message === "déja signalé" && alert("Vous avez déja signalé cette article.");
     })
+    .catch(err => alert(err.response.data.error.message))
 }
 
 export const reportComment = commentId => dispatch => {
@@ -345,4 +358,5 @@ export const reportComment = commentId => dispatch => {
     .then(res => {
         res.data.message === "déja signalé" && alert("vous avez déja signalé ce commentaire.")
     })
+    .catch(err => alert(err.response.data.error.message))
 } 

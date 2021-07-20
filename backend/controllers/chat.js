@@ -6,7 +6,7 @@ export const loadChat = (req, res) => {
     // Get all chat message
     db.query(sqlLoadChat,
         (err, result) => {
-            if (err) throw err;
+            if (err) res.status(500).json({error: "erreur serveur"});
             const data = []
             for (const row of result) {
                 const message = {

@@ -20,8 +20,6 @@ export default function ArticleCard(props) {
     const [showMore, setShowMore] = useState(show);
     const dispatch = useDispatch();
 
-    console.log(props);
-    
     const handleLike = (articleId, index, likeValue) => {
         dispatch(likeArticle(articleId, index, likeValue))
     }

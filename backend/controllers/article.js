@@ -93,7 +93,6 @@ export const getArticles = (req, res, next) => {
 }
 
 export const deleteArticle = (req, res, next) => {
-    console.log(req.body);
     const data = [req.body.articleId, res.locals.userId]
     // Recover file name to delete it
     db.query(sqlGetDeleteFilename, data, (err, result) => {

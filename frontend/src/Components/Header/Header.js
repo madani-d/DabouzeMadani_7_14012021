@@ -78,6 +78,7 @@ export default function Header() {
 
     return (
         <>
+        {/* {    Desktop version     } */}
         { windowWidth > 1024 ?          
             <nav className="nav">
                 <img src={Logo} alt="logo Groupomania" className="nav-logo"/>
@@ -140,6 +141,7 @@ export default function Header() {
             </nav>
         :
             <>
+            {/* {     Mobile version    } */}
                 <div className="nav-logo-small-container">
                     <img src={WhiteLogo} alt="logo Groupomania" className="nav-logo-small"/>
                 </div>

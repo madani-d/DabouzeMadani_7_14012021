@@ -54,7 +54,7 @@ export default function AvatarCropper({avatar, userId, setUpdateAvatar}) {
                 onCropComplete={onCropComplete}
                 onZoomChange={setZoom}
             />
-            <button  onClick={onSubmit} className="avatar-button avatar-button-send">Envoyer</button>
+            <button  onClick={onSubmit} className="avatar-button avatar-button-send">Valider</button>
         </>
     )
 }

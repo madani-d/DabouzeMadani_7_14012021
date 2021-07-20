@@ -82,9 +82,13 @@ export const restoreConnection = () => dispatch => {
         } 
     )
     .then(result => {
-        console.log(result);
         dispatch({
             type: 'CONNECT'
             })
+    })
+    .catch(result => {
+        dispatch({
+            type: 'DISCONNECT'
+        })
     })
 }

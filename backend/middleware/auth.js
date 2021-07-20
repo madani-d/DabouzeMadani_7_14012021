@@ -7,7 +7,7 @@ export const auth = (req, res, next) => {
         db.query(sqlAuthToken,
             [req.query.ID],
             (err, result) => {
-                if (err) throw err;
+                if (err) res.status(500).json({error: "erreur serveur"});
                 const token = req.headers.authorization.split(' ')[1];
                 const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
                 if (decodedToken.userUuid === result[0].uuid) {
@@ -27,7 +27,7 @@ export const socketAuth = (socket, next) => {
             db.query(sqlAuthToken,
                 [userId],
                 (err, result) => {
-                    if (err) console.log(err);
+                    if (err) res.status(500).json({error: "erreur serveur"});
                     console.log(userId);
                     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
                     if (decodedToken.userUuid === result[0].uuid) {
