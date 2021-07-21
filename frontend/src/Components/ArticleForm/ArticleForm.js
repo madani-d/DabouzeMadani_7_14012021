@@ -17,7 +17,6 @@ function Formulaire() {
         const formData = new FormData();
         formData.append("article", data.article);
         formData.append("file", fileData);
-        console.log(fileData.type);
         dispatch(postArticle(formData, fileData.type));
         e.target.reset();
         setPreview();
@@ -25,7 +24,6 @@ function Formulaire() {
 
     const handleFile = e => {
         setFileData(e.target.files[0]);
-        console.log(URL.createObjectURL(e.target.files[0]));
         setPreview(URL.createObjectURL(e.target.files[0]))
     }
 

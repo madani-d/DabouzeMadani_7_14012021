@@ -49,7 +49,6 @@ export const generateDownload = async (imageSrc, crop, imageData) => {
         return;
     }
     const { type, name } = imageData
-    console.log(imageData);
     const canvas = await getCroppedImg(imageSrc, crop);
     function dataURLtoFile(dataurl, filename, type) {
         var arr = dataurl.split(','),
@@ -65,6 +64,5 @@ export const generateDownload = async (imageSrc, crop, imageData) => {
         return new File([u8arr], filename, {type:mime});
     }
     const test = dataURLtoFile(canvas.toDataURL(), name, type);
-    console.log(test);
     return test;
 };

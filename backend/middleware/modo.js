@@ -7,7 +7,6 @@ export const modo = (req, res, next) => {
         res.locals.userId,
         (err, result) => {
             if (err) throw err;
-            console.log(result[0].role);
             if (result[0].role === 'M') {
                 next()
             } else {

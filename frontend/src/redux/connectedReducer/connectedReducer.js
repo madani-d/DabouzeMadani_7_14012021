@@ -19,9 +19,11 @@ function connectedReducer(state = INITIALE_CONNECTED_STATE, action) {
                 connected: true
             }
         case 'DISCONNECT':
-            socket.emit('deconnexion', socket.auth.userId)
-            socket.disconnect(socket.auth.userId);
-            socket.close();
+            if (socket) {
+                socket.emit('deconnexion', socket.auth.userId)
+                socket.disconnect(socket.auth.userId);
+                socket.close();
+            }
             return {
                 connected: false
             }
@@ -69,7 +71,6 @@ export const signup = data => dispatch => {
                 })
             })
             .catch(err => {
-                console.log(err.response.data.message);
                 alert(err.response.data.message)
             })
 }

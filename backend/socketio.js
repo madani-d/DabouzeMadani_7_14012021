@@ -31,8 +31,7 @@ export const socketIO = (server) => {
                     if (err) console.log(err);
                     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
                     if (decodedToken.userUuid === result[0].uuid) {
-                        console.log('chat ouvert');
-                        console.log(userId);
+                        console.log('user ' + userId + ' connected');
                     } else {
                         console.log('accés refusé');
                     }
@@ -72,7 +71,7 @@ export const socketIO = (server) => {
             io.emit('user connected', users)
             // Send to all users connected updated array of users connected
             socket.on('disconnect', socket => {
-                console.log('deconnection');
+                console.log('user ' + userId + ' disconnected');
             })
         })
         socket.on('chat message', message => {

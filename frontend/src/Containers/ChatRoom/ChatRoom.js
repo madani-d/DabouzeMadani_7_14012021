@@ -46,6 +46,7 @@ export default function ChatRoom() {
     const handleSubmit = e => {
         e.preventDefault()
         socket.emit('chat message', e.target[0].value);
+        e.target[0].value = "";
     }
 
     return (

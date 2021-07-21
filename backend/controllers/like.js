@@ -17,7 +17,6 @@ export const createLikeArticle = (req, res, next) => {
         likeArticleData,
         (err, result) => {
             if (err) res.status(500).json({error: "erreur serveur"});
-            console.log(result);
             res.status(200).json({ message: "Like ajouté!" })
         })
 }
@@ -49,7 +48,6 @@ export const createLikeComment = (req, res, next) => {
         likeArticleData,
         (err, result) => {
             if (err) res.status(500).json({error: "erreur serveur"});
-            console.log(result);
             res.status(200).json({ message: "Like ajouté!" })
         })
 }

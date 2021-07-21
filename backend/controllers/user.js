@@ -126,13 +126,10 @@ export const getAllUsers = (req, res, next) => {
 }
 
 export const updateAvatar = (req, res, next) => {
-    console.log(req.file);
     const data = [
         req.body.userId,
         `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     ];
-    console.log(data);
-    console.log(req.body);
     // Use Stored procedure
     // First time recover avatar name to remove it
     // Then replace by new avatar and send it to the front
@@ -140,7 +137,6 @@ export const updateAvatar = (req, res, next) => {
         sqlUpdateAvatar,
         data,
         (err, result) => {
-            console.log(result[0][0].avatar);
             const filename = result[0][0].avatar.split('images/')[1]
             fs.unlink(`images/${filename}`, (error => error));
             res.status(200).json(result[1])
@@ -163,10 +159,8 @@ export const deleteAccount = (req, res) => {
                     imageToDeleted.push(item.image_url)
                 }
             }
-            console.log(imageToDeleted);
             for (const image of imageToDeleted) {
                 const filename = image.split('images/')[1];
-                console.log(filename);
                 fs.unlink(`images/${filename}`, (error => error))
             }
             res.status(200).json({message: "compte supprimé avec succés"})

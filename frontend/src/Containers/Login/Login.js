@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import logo from '../../assets/without-icon.svg';
 import icon from '../../assets/icon.svg';
+import { restoreConnection } from '../../redux/connectedReducer/connectedReducer';
 import axios from 'axios';
 import './Login.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,11 +12,22 @@ import { faAt, faLock } from '@fortawesome/free-solid-svg-icons';
 require('dotenv').config();
 
 function Login() {
+    const connected = useSelector(state => state.connectedReducer.connected)
     const { register, handleSubmit, } = useForm();
     const [errorMessage, setErrorMessage] = useState("")
     const dispatch = useDispatch();
+    if (!connected && localStorage.storageToken) {
+        dispatch(restoreConnection())
+    }
 
     const history = useHistory();
+
+    useEffect(() => {
+        if (connected) {
+            history.push('/home')
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [connected])
 
     const onSubmit = data => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`,
