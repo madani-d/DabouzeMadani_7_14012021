@@ -20,12 +20,12 @@
 .users-list {
     width: 50%;
     @media (max-width: 1024px) {
-        position: absolute;
+        position: sticky;
         width: 100%;
         margin-top: 30px;
         left: 0;
         right: 0;
-        top: 38px;
+        top: 0;
     }
     position: fixed;
     background: #dde1e7;
