@@ -92,26 +92,28 @@ export default function Header() {
             <nav className="nav">
                 <img src={Logo} alt="logo Groupomania" className="nav-logo"/>
                 <ul className="liste">
+                    {myId &&
+                        <li className="items">
+                            <Link to={{
+                                pathname: `/profile/${myId.prenom}-${myId.nom}-${myId.id}`,
+                                state: {
+                                    userId: myId.id
+                                }
+                            }}>
+                            <img
+                                className="me-avatar"
+                                src={myId.avatar}
+                                alt={myId.nom}
+                        />
+                            </Link>
+                        </li>
+                    }
                     <li className="items">
                         <FontAwesomeIcon
                             icon={faHome}
                             onClick={() => history.push('/home')}
                         />
                     </li>
-                    {myId &&
-                        <Link to={{
-                            pathname: `/profile/${myId.prenom}-${myId.nom}-${myId.id}`,
-                            state: {
-                                userId: myId.id
-                            }
-                        }}>
-                            <li className="items">
-                                <FontAwesomeIcon
-                                    icon={faUser}
-                                />
-                            </li>
-                        </Link>
-                    }
                     <li className="items">
                         <FontAwesomeIcon
                             icon={faComments}
@@ -170,26 +172,28 @@ export default function Header() {
                 </div>
                 <nav className="nav-small">
                     <ul className="liste liste-small">
+                        {myId &&
+                        <li className="items">
+                            <Link to={{
+                                pathname: `/profile/${myId.prenom}-${myId.nom}-${myId.id}`,
+                                state: {
+                                    userId: myId.id
+                                }
+                            }}>
+                            <img
+                                className="me-avatar"
+                                src={myId.avatar}
+                                alt={myId.nom}
+                        />
+                            </Link>
+                        </li>
+                        }
                         <li className="items">
                             <FontAwesomeIcon
                                 icon={faHome}
                             onClick={() => history.push('/home')}
                             />
                         </li>
-                        {myId &&
-                        <Link to={{
-                            pathname: `/profile/${myId.prenom}-${myId.nom}-${myId.id}`,
-                            state: {
-                                userId: myId.id
-                            }
-                        }}>
-                            <li className="items">
-                                <FontAwesomeIcon
-                                    icon={faUser}
-                                />
-                            </li>
-                        </Link>
-                        }
                         <li className="items">
                         <FontAwesomeIcon
                             icon={faComments}
