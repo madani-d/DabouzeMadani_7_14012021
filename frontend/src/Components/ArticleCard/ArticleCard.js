@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import CommentCard from '../CommentCard/CommentCard';
 import CommentForm from '../CommentForm/CommentForm';
@@ -10,16 +10,20 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHeart } from '@fortawesome/free-solid-svg-icons';
 import './ArticleCard.scss';
+import { useEffect } from 'react';
 
 
 export default function ArticleCard(props) {
     const articles = props.articleData;
-    let show = useRef(false)
-    const [option, setOption] = useState(false);// When option is true open modal
+    const [option, setOption] = useState();// When option is true open modal
     const [modify, setModify] = useState(false);// When modify is true display formArticle
-    const [showMore, setShowMore] = useState(show);
+    const [showMore, setShowMore] = useState();
     const dispatch = useDispatch();
 
+
+    useEffect(() =>{
+        setShowMore(false)
+    }, [option])
     const handleLike = (articleId, index, likeValue) => {
         dispatch(likeArticle(articleId, index, likeValue))
     }

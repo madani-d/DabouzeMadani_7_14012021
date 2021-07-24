@@ -42,6 +42,7 @@ export default function Header() {
     useEffect(() => {
         const MyId = users.filter(item => item.id === me);
         setMyId(...MyId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users])
 
     useEffect(() => {
@@ -175,6 +176,20 @@ export default function Header() {
                             onClick={() => history.push('/home')}
                             />
                         </li>
+                        {myId &&
+                        <Link to={{
+                            pathname: `/profile/${myId.prenom}-${myId.nom}-${myId.id}`,
+                            state: {
+                                userId: myId.id
+                            }
+                        }}>
+                            <li className="items">
+                                <FontAwesomeIcon
+                                    icon={faUser}
+                                />
+                            </li>
+                        </Link>
+                        }
                         <li className="items">
                         <FontAwesomeIcon
                             icon={faComments}
