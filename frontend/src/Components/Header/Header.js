@@ -7,7 +7,7 @@ import ModalSearch from '../ModalSearch/ModalSearch';
 import Logo from '../../assets/icon-left-font-monochrome-black.svg';
 import WhiteLogo from '../../assets/icon-left-font-monochrome-white.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComments, faHome, faSearch, faSignOutAlt, faUserShield } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faHome, faSearch, faSignOutAlt, faUser, faUserShield } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function Header() {
@@ -35,6 +35,14 @@ export default function Header() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [modalSearch, setModalSearch] = useState(false);
+    const [ myId, setMyId ] = useState();
+    const me = parseInt(JSON.parse(localStorage.storageToken).userId)
+
+
+    useEffect(() => {
+        const MyId = users.filter(item => item.id === me);
+        setMyId(...MyId);
+    }, [users])
 
     useEffect(() => {
         const changeWidth = () => {
@@ -89,6 +97,20 @@ export default function Header() {
                             onClick={() => history.push('/home')}
                         />
                     </li>
+                    {myId &&
+                        <Link to={{
+                            pathname: `/profile/${myId.prenom}-${myId.nom}-${myId.id}`,
+                            state: {
+                                userId: myId.id
+                            }
+                        }}>
+                            <li className="items">
+                                <FontAwesomeIcon
+                                    icon={faUser}
+                                />
+                            </li>
+                        </Link>
+                    }
                     <li className="items">
                         <FontAwesomeIcon
                             icon={faComments}

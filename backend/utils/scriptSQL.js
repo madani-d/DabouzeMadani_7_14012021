@@ -209,8 +209,9 @@ export const sqlLoadChat = `
     SELECT user_id, texte_chat, Chat.date_post,
     prenom, nom, avatar
     FROM Chat
-    INNER JOIN User
-    ON Chat.user_id = User.id;
+    LEFT JOIN User
+    ON Chat.user_id = User.id
+    ORDER BY Chat.date_post;
 `
 
 export const sqlInsertMessageChat = `

@@ -137,8 +137,11 @@ export const updateAvatar = (req, res, next) => {
         sqlUpdateAvatar,
         data,
         (err, result) => {
-            const filename = result[0][0].avatar.split('images/')[1]
-            fs.unlink(`images/${filename}`, (error => error));
+            const filename = result[0][0].avatar.split('images/')[1];
+            console.log(filename);
+            if (filename !== 'defaultAvatar.png') {
+                fs.unlink(`images/${filename}`, (error => error));
+            }
             res.status(200).json(result[1])
         }
     )

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Header from '../../Components/Header/Header';
 import './CharRoom.scss';
-import { loadChat } from '../../redux/socketReducer/socketReducer';
+import { loadChat, sendChat } from '../../redux/socketReducer/socketReducer';
 import io from 'socket.io-client';
 
 let socket;
@@ -10,6 +10,7 @@ export default function ChatRoom() {
     const { messages } = useSelector(state => state.socketReducer)
     const [ messagesList, setMessagesList ] = useState(messages)
     const [ users, setUsers ] = useState([])
+    const [ myId, setMyId ] = useState();
     const dispatch = useDispatch()
     const me = parseInt(JSON.parse(localStorage.storageToken).userId)
     
@@ -30,22 +31,34 @@ export default function ChatRoom() {
     }, [])
 
     useEffect(() => {
+        window.scrollTo(0,document.body.scrollHeight);
         setMessagesList(messages)
     }, [messages])
 
     useEffect(() => {
         socket.on('chat message', message => {
-            setMessagesList([...messages, message])
+            if (message.user.id !== me) {
+                dispatch(sendChat(message))
+            }
+            window.scrollTo(0,document.body.scrollHeight);
+
         })
         socket.on('user connected', users => {
             setUsers(users)
+            const MyId = users.filter(item => item.id === me);
+            setMyId(...MyId);
         })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[socket])
+    },[])
 
     const handleSubmit = e => {
         e.preventDefault()
         socket.emit('chat message', e.target[0].value);
+        const messageData = {
+            message: e.target[0].value,
+            user: myId
+        }
+        dispatch(sendChat(messageData))
         e.target[0].value = "";
     }
 

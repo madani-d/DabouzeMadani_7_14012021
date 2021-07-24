@@ -44,7 +44,7 @@ function Login() {
                 history.push('/home');
             })
             .catch(err => {
-                setErrorMessage(err.response);
+                setErrorMessage(err.response.data.message);
             })
     };
 

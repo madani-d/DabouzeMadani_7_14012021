@@ -10,6 +10,12 @@ function socketReducer(state = INITIAL_SOCKET_STATE, action) {
                 messages: action.payload
             }
 
+        case 'SENDCHAT':
+            const newList = [...state.messages, action.payload];
+            return {
+                messages: newList
+            }
+
         default:
             return {
                 messages: state.messages
@@ -31,5 +37,13 @@ export const loadChat = () => dispatch => {
             type: 'LOADCHAT',
             payload: res.data
         })
+    })
+}
+
+export const sendChat = message => dispatch => {
+
+    dispatch({
+        type: 'SENDCHAT',
+        payload: message
     })
 }
