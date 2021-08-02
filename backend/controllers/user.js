@@ -138,7 +138,6 @@ export const updateAvatar = (req, res, next) => {
         data,
         (err, result) => {
             const filename = result[0][0].avatar.split('images/')[1];
-            console.log(filename);
             if (filename !== 'defaultAvatar.png') {
                 fs.unlink(`images/${filename}`, (error => error));
             }
@@ -164,7 +163,9 @@ export const deleteAccount = (req, res) => {
             }
             for (const image of imageToDeleted) {
                 const filename = image.split('images/')[1];
-                fs.unlink(`images/${filename}`, (error => error))
+                if (filename !== 'defaultAvatar.png') {
+                    fs.unlink(`images/${filename}`, (error => error));
+                }
             }
             res.status(200).json({message: "compte supprimé avec succés"})
         }

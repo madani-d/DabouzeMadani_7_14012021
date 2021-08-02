@@ -56,6 +56,6 @@ export const updateAvatar = data => dispatch => {
         } 
     )
     .then(res => {
-        console.log(res);
+        dispatch(getUsers)
     })
 }

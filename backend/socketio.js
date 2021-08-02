@@ -30,6 +30,7 @@ export const socketIO = (server) => {
                 (err, result) => {
                     if (err) console.log(err);
                     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN_KEY);
+                    console.log(decodedToken);
                     if (decodedToken.userUuid === result[0].uuid) {
                         console.log('user ' + userId + ' connected');
                     } else {
